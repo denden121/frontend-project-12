@@ -3,7 +3,7 @@
 
 ## Деплой
 
-Задеплоенное приложение: [frontend-project-12](TEMP)
+Задеплоенное приложение: [frontend-project-12](https://frontend-project-12-1wp6.onrender.com/)
 
 ## Локальный запуск
 
