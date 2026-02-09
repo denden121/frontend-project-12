@@ -3,7 +3,7 @@
 
 ## Деплой
 
-Задеплоенное приложение: [frontend-project-12](https://frontend-project-12.onrender.com) *(после деплоя на Render замените ссылку на URL вашего сервиса)*
+Задеплоенное приложение: [frontend-project-12](TEMP)
 
 ## Локальный запуск
 
