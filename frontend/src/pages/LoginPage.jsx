@@ -8,18 +8,20 @@ import {
   Form as RBForm,
   InputGroup,
 } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
 
 function LoginPage() {
   const { login } = useAuth();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const { t } = useTranslation();
 
   return (
     <div className="d-flex justify-content-center mt-5">
       <Card style={{ width: '100%', maxWidth: '520px' }}>
         <Card.Body>
-          <Card.Title className="mb-3">Вход</Card.Title>
+          <Card.Title className="mb-3">{t('auth.login')}</Card.Title>
           <Formik
             initialValues={{ username: '', password: '' }}
             onSubmit={async (values, { setStatus }) => {
@@ -28,7 +30,7 @@ function LoginPage() {
                 await login(values.username, values.password);
                 navigate('/', { replace: true });
               } catch (err) {
-                const message = err.response?.data?.message ?? err.message ?? 'Ошибка авторизации';
+                const message = err.response?.data?.message ?? err.message ?? t('auth.loginErrorFallback');
                 setStatus(message);
               }
             }}
@@ -41,7 +43,7 @@ function LoginPage() {
                   </Alert>
                 )}
                 <RBForm.Group className="mb-3" controlId="loginUsername">
-                  <RBForm.Label>Имя пользователя</RBForm.Label>
+                  <RBForm.Label>{t('auth.username')}</RBForm.Label>
                   <Field
                     name="username"
                     as={RBForm.Control}
@@ -51,7 +53,7 @@ function LoginPage() {
                   />
                 </RBForm.Group>
                 <RBForm.Group className="mb-4" controlId="loginPassword">
-                  <RBForm.Label>Пароль</RBForm.Label>
+                  <RBForm.Label>{t('auth.password')}</RBForm.Label>
                   <InputGroup>
                     <Field
                       name="password"
@@ -65,15 +67,15 @@ function LoginPage() {
                       type="button"
                       onClick={() => setShowPassword((prev) => !prev)}
                     >
-                      {showPassword ? 'Скрыть' : 'Показать'}
+                      {showPassword ? t('auth.hidePassword') : t('auth.showPassword')}
                     </Button>
                   </InputGroup>
                 </RBForm.Group>
                 <div className="d-flex justify-content-between align-items-center">
                   <Button variant="primary" type="submit">
-                    Войти
+                    {t('auth.loginButton')}
                   </Button>
-                  <Link to="/signup">Регистрация</Link>
+                  <Link to="/signup">{t('auth.signup')}</Link>
                 </div>
               </Form>
             )}

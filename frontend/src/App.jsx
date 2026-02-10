@@ -6,6 +6,7 @@ import {
   useNavigate,
 } from 'react-router-dom';
 import { Container, Navbar, Nav, Button } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import HomePage from './pages/HomePage';
@@ -17,6 +18,7 @@ import './App.css';
 function Layout() {
   const { isAuthenticated, username, logout } = useAuth();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const handleLogout = () => {
     logout();
@@ -28,7 +30,7 @@ function Layout() {
       <Navbar bg="dark" variant="dark" expand="sm">
         <Container>
           <Navbar.Brand as={Link} to="/">
-            Hexlet Chat
+            {t('app.title')}
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="main-navbar" />
           <Navbar.Collapse id="main-navbar" className="justify-content-end">
@@ -36,16 +38,16 @@ function Layout() {
               <div className="d-flex align-items-center gap-2">
                 <span>{username}</span>
                 <Button variant="outline-light" size="sm" onClick={handleLogout}>
-                  Выйти
+                  {t('auth.logout')}
                 </Button>
               </div>
             ) : (
               <Nav>
                 <Nav.Link as={Link} to="/login">
-                  Войти
+                  {t('auth.login')}
                 </Nav.Link>
                 <Nav.Link as={Link} to="/signup">
-                  Регистрация
+                  {t('auth.signup')}
                 </Nav.Link>
               </Nav>
             )}

@@ -9,35 +9,37 @@ import {
   Form as RBForm,
   InputGroup,
 } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
 
-const SignupSchema = Yup.object({
+const SignupSchema = (t) => Yup.object({
   username: Yup.string()
     .trim()
-    .min(3, 'От 3 до 20 символов')
-    .max(20, 'От 3 до 20 символов')
-    .required('Обязательное поле'),
+    .min(3, t('validation.usernameLength'))
+    .max(20, t('validation.usernameLength'))
+    .required(t('validation.required')),
   password: Yup.string()
-    .min(6, 'Не менее 6 символов')
-    .required('Обязательное поле'),
+    .min(6, t('validation.passwordMin'))
+    .required(t('validation.required')),
   confirmPassword: Yup.string()
-    .oneOf([Yup.ref('password')], 'Пароли должны совпадать')
-    .required('Обязательное поле'),
+    .oneOf([Yup.ref('password')], t('validation.passwordsMustMatch'))
+    .required(t('validation.required')),
 });
 
 function SignupPage() {
   const { signup } = useAuth();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const { t } = useTranslation();
 
   return (
     <div className="d-flex justify-content-center mt-5">
       <Card style={{ width: '100%', maxWidth: '520px' }}>
         <Card.Body>
-          <Card.Title className="mb-3">Регистрация</Card.Title>
+          <Card.Title className="mb-3">{t('auth.signup')}</Card.Title>
           <Formik
             initialValues={{ username: '', password: '', confirmPassword: '' }}
-            validationSchema={SignupSchema}
+            validationSchema={SignupSchema(t)}
             onSubmit={async (values, { setStatus, setSubmitting }) => {
               setStatus(null);
               try {
@@ -45,9 +47,9 @@ function SignupPage() {
                 navigate('/', { replace: true });
               } catch (err) {
                 if (err.response?.status === 409) {
-                  setStatus('Пользователь с таким именем уже существует');
+                  setStatus(t('auth.userExists'));
                 } else {
-                  const message = err.response?.data?.message ?? err.message ?? 'Ошибка регистрации';
+                  const message = err.response?.data?.message ?? err.message ?? t('auth.signupErrorFallback');
                   setStatus(message);
                 }
               } finally {
@@ -68,7 +70,7 @@ function SignupPage() {
                   </Alert>
                 )}
                 <RBForm.Group className="mb-3" controlId="signupUsername">
-                  <RBForm.Label>Имя пользователя</RBForm.Label>
+                  <RBForm.Label>{t('auth.username')}</RBForm.Label>
                   <Field
                     name="username"
                     as={RBForm.Control}
@@ -81,7 +83,7 @@ function SignupPage() {
                   )}
                 </RBForm.Group>
                 <RBForm.Group className="mb-3" controlId="signupPassword">
-                  <RBForm.Label>Пароль</RBForm.Label>
+                  <RBForm.Label>{t('auth.password')}</RBForm.Label>
                   <InputGroup>
                     <Field
                       name="password"
@@ -95,18 +97,18 @@ function SignupPage() {
                       type="button"
                       onClick={() => setShowPassword((prev) => !prev)}
                     >
-                      {showPassword ? 'Скрыть' : 'Показать'}
+                      {showPassword ? t('auth.hidePassword') : t('auth.showPassword')}
                     </Button>
                   </InputGroup>
                   <div className="form-text text-muted mt-1">
-                    Не менее 6 символов
+                    {t('auth.passwordHint')}
                   </div>
                   {errors.password && touched.password && (
                     <div className="modal-error">{errors.password}</div>
                   )}
                 </RBForm.Group>
                 <RBForm.Group className="mb-4" controlId="signupConfirmPassword">
-                  <RBForm.Label>Подтверждение пароля</RBForm.Label>
+                  <RBForm.Label>{t('auth.confirmPassword')}</RBForm.Label>
                   <Field
                     name="confirmPassword"
                     as={RBForm.Control}
@@ -123,9 +125,9 @@ function SignupPage() {
                     type="submit"
                     disabled={isSubmitting}
                   >
-                    Зарегистрироваться
+                    {t('auth.signupButton')}
                   </Button>
-                  <Link to="/login">У меня уже есть аккаунт</Link>
+                  <Link to="/login">{t('auth.haveAccount')}</Link>
                 </div>
               </Form>
             )}

@@ -9,6 +9,7 @@ import {
   Modal,
   Form as RBForm,
 } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 import {
   fetchChatData,
   setCurrentChannelId,
@@ -41,6 +42,7 @@ function HomePage() {
     removingChannelId,
     channelsError,
   } = useSelector((state) => state.chat);
+  const { t } = useTranslation();
 
   useSocket(!!token && status === 'succeeded');
 
@@ -99,20 +101,20 @@ function HomePage() {
 
   return (
     <div className="chat-page">
-      {status === 'loading' && <p>Загрузка чата...</p>}
-      {status === 'failed' && <p>{error}</p>}
+      {status === 'loading' && <p>{t('chat.loading')}</p>}
+      {status === 'failed' && <p>{error || t('chat.loadError')}</p>}
 
       {status === 'succeeded' && (
         <>
           {!socketConnected && (
             <p className="chat-status chat-status--offline">
-              Нет соединения. Сообщения могут приходить с задержкой.
+              {t('chat.offlineNotice')}
             </p>
           )}
           <div className="chat-layout">
             <aside className="chat-layout__sidebar">
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-                <h2 style={{ margin: 0 }}>Каналы</h2>
+                <h2 style={{ margin: 0 }}>{t('chat.channels')}</h2>
                 <Button
                   type="button"
                   size="sm"
@@ -184,7 +186,7 @@ function HomePage() {
                     <span>{message.body}</span>
                   </div>
                 ))}
-                {currentChannelMessages.length === 0 && <p>Сообщений пока нет</p>}
+                {currentChannelMessages.length === 0 && <p>{t('chat.noMessages')}</p>}
               </div>
 
               <form className="chat-form" onSubmit={handleSubmit}>
@@ -198,16 +200,16 @@ function HomePage() {
                     className="chat-form__input"
                     value={inputBody}
                     onChange={(e) => setInputBody(e.target.value)}
-                    placeholder="Введите сообщение..."
+                    placeholder={t('chat.messageInputPlaceholder')}
                     disabled={isSending}
-                    aria-label="Текст сообщения"
+                    aria-label={t('chat.messageInputAriaLabel')}
                   />
                   <button
                     type="submit"
                     className="chat-form__submit"
                     disabled={isSending || !inputBody.trim()}
                   >
-                    {isSending ? 'Отправка…' : 'Отправить'}
+                    {isSending ? t('chat.sending') : t('chat.send')}
                   </button>
                 </div>
               </form>
@@ -261,21 +263,22 @@ function AddChannelModal({
   token,
   dispatch,
 }) {
+  const { t } = useTranslation();
   if (!isOpen) return null;
 
   const schema = Yup.object({
     name: Yup.string()
       .trim()
-      .min(3, 'От 3 до 20 символов')
-      .max(20, 'От 3 до 20 символов')
-      .notOneOf(existingNames, 'Должно быть уникальным')
-      .required('Обязательное поле'),
+      .min(3, t('validation.channelNameLength'))
+      .max(20, t('validation.channelNameLength'))
+      .notOneOf(existingNames, t('validation.mustBeUnique'))
+      .required(t('validation.required')),
   });
 
   return (
     <Modal show={isOpen} onHide={onClose} centered>
       <Modal.Header closeButton>
-        <Modal.Title>Добавить канал</Modal.Title>
+        <Modal.Title>{t('chat.addChannel')}</Modal.Title>
       </Modal.Header>
       <Formik
         initialValues={{ name: '' }}
@@ -296,12 +299,12 @@ function AddChannelModal({
           <Form>
             <Modal.Body>
               <RBForm.Group className="modal-field" controlId="newChannelName">
-                <RBForm.Label>Имя канала</RBForm.Label>
+                <RBForm.Label>{t('chat.channelName')}</RBForm.Label>
                 <Field
                   name="name"
                   as={RBForm.Control}
                   autoFocus
-                  placeholder="Имя канала"
+                  placeholder={t('chat.newChannelPlaceholder')}
                 />
                 {errors.name && touched.name && (
                   <div className="modal-error">{errors.name}</div>
@@ -311,14 +314,14 @@ function AddChannelModal({
             </Modal.Body>
             <Modal.Footer className="modal-actions">
               <Button variant="secondary" type="button" onClick={onClose}>
-                Отмена
+                {t('chat.cancel')}
               </Button>
               <Button
                 variant="primary"
                 type="submit"
                 disabled={isSubmitting || creating}
               >
-                {creating ? 'Создание…' : 'Создать'}
+                {creating ? t('chat.creating') : t('chat.create')}
               </Button>
             </Modal.Footer>
           </Form>
@@ -337,15 +340,16 @@ function RenameChannelModal({
   token,
   dispatch,
 }) {
+  const { t } = useTranslation();
   if (!channel) return null;
 
   const schema = Yup.object({
     name: Yup.string()
       .trim()
-      .min(3, 'От 3 до 20 символов')
-      .max(20, 'От 3 до 20 символов')
-      .notOneOf(existingNames, 'Должно быть уникальным')
-      .required('Обязательное поле'),
+      .min(3, t('validation.channelNameLength'))
+      .max(20, t('validation.channelNameLength'))
+      .notOneOf(existingNames, t('validation.mustBeUnique'))
+      .required(t('validation.required')),
   });
 
   const isRenaming = renamingChannelId === channel.id;
@@ -353,7 +357,7 @@ function RenameChannelModal({
   return (
     <Modal show onHide={onClose} centered>
       <Modal.Header closeButton>
-        <Modal.Title>Переименовать канал</Modal.Title>
+        <Modal.Title>{t('chat.renameChannel')}</Modal.Title>
       </Modal.Header>
       <Formik
         initialValues={{ name: channel.name }}
@@ -375,7 +379,7 @@ function RenameChannelModal({
           <Form>
             <Modal.Body>
               <RBForm.Group className="modal-field" controlId="renameChannelName">
-                <RBForm.Label>Имя канала</RBForm.Label>
+                <RBForm.Label>{t('chat.channelName')}</RBForm.Label>
                 <Field
                   name="name"
                   as={RBForm.Control}
@@ -389,14 +393,14 @@ function RenameChannelModal({
             </Modal.Body>
             <Modal.Footer className="modal-actions">
               <Button variant="secondary" type="button" onClick={onClose}>
-                Отмена
+                {t('chat.cancel')}
               </Button>
               <Button
                 variant="primary"
                 type="submit"
                 disabled={isSubmitting || isRenaming}
               >
-                {isRenaming ? 'Сохранение…' : 'Сохранить'}
+                {isRenaming ? t('chat.saving') : t('chat.save')}
               </Button>
             </Modal.Footer>
           </Form>
@@ -414,6 +418,7 @@ function RemoveChannelModal({
   token,
   dispatch,
 }) {
+  const { t } = useTranslation();
   if (!channel) return null;
 
   const isRemoving = removingChannelId === channel.id;
@@ -426,21 +431,15 @@ function RemoveChannelModal({
   return (
     <Modal show onHide={onClose} centered>
       <Modal.Header closeButton>
-        <Modal.Title>Удалить канал</Modal.Title>
+        <Modal.Title>{t('chat.confirmRemoveTitle')}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <p>
-          Уверены, что хотите удалить канал
-          {' '}
-          #
-          {channel.name}
-          ?
-        </p>
+        <p>{t('chat.confirmRemoveText', { name: channel.name })}</p>
         {error && <div className="modal-error">{error}</div>}
       </Modal.Body>
       <Modal.Footer className="modal-actions">
         <Button variant="secondary" type="button" onClick={onClose}>
-          Отмена
+          {t('chat.cancel')}
         </Button>
         <Button
           variant="danger"
@@ -448,7 +447,7 @@ function RemoveChannelModal({
           onClick={handleRemove}
           disabled={isRemoving}
         >
-          {isRemoving ? 'Удаление…' : 'Удалить'}
+          {isRemoving ? t('chat.removing') : t('chat.removeChannel')}
         </Button>
       </Modal.Footer>
     </Modal>
