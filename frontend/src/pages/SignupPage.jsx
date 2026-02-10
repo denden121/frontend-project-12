@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import {
@@ -11,6 +11,11 @@ import {
 } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
+import {
+  ROUTES,
+  DEFAULT_LANG,
+  buildPathWithLang,
+} from '../routes';
 
 const SignupSchema = (t) => Yup.object({
   username: Yup.string()
@@ -31,6 +36,8 @@ function SignupPage() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const { t } = useTranslation();
+  const [searchParams] = useSearchParams();
+  const lang = searchParams.get('lang') || DEFAULT_LANG;
 
   return (
     <div className="d-flex justify-content-center mt-5">
@@ -44,7 +51,7 @@ function SignupPage() {
               setStatus(null);
               try {
                 await signup(values.username.trim(), values.password);
-                navigate('/', { replace: true });
+                navigate(buildPathWithLang(ROUTES.home, lang), { replace: true });
               } catch (err) {
                 if (err.response?.status === 409) {
                   setStatus(t('auth.userExists'));
@@ -127,7 +134,9 @@ function SignupPage() {
                   >
                     {t('auth.signupButton')}
                   </Button>
-                  <Link to="/login">{t('auth.haveAccount')}</Link>
+                  <Link to={buildPathWithLang(ROUTES.login, lang)}>
+                    {t('auth.haveAccount')}
+                  </Link>
                 </div>
               </Form>
             )}

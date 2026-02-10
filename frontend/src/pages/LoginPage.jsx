@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Formik, Form, Field } from 'formik';
 import {
   Alert,
@@ -10,12 +10,19 @@ import {
 } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
+import {
+  ROUTES,
+  DEFAULT_LANG,
+  buildPathWithLang,
+} from '../routes';
 
 function LoginPage() {
   const { login } = useAuth();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const { t } = useTranslation();
+  const [searchParams] = useSearchParams();
+  const lang = searchParams.get('lang') || DEFAULT_LANG;
 
   return (
     <div className="d-flex justify-content-center mt-5">
@@ -28,7 +35,7 @@ function LoginPage() {
               setStatus(null);
               try {
                 await login(values.username, values.password);
-                navigate('/', { replace: true });
+                navigate(buildPathWithLang(ROUTES.home, lang), { replace: true });
               } catch (err) {
                 const message = err.response?.data?.message ?? err.message ?? t('auth.loginErrorFallback');
                 setStatus(message);
@@ -75,7 +82,9 @@ function LoginPage() {
                   <Button variant="primary" type="submit">
                     {t('auth.loginButton')}
                   </Button>
-                  <Link to="/signup">{t('auth.signup')}</Link>
+                  <Link to={buildPathWithLang(ROUTES.signup, lang)}>
+                    {t('auth.signup')}
+                  </Link>
                 </div>
               </Form>
             )}
