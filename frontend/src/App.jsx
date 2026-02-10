@@ -10,6 +10,8 @@ import {
 } from 'react-router-dom';
 import { useEffect } from 'react';
 import { Container, Navbar, Nav, Button } from 'react-bootstrap';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { useTranslation } from 'react-i18next';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -159,6 +161,7 @@ function App() {
           element={<Navigate to={buildPathWithLang(ROUTES.home, DEFAULT_LANG)} replace />}
         />
       </Routes>
+      <ToastContainer position="top-right" autoClose={4000} hideProgressBar={false} newestOnTop closeOnClick pauseOnFocusLoss draggable pauseOnHover theme="dark" />
     </AuthProvider>
   );
 }

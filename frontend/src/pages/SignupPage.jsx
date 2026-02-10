@@ -16,6 +16,7 @@ import {
   DEFAULT_LANG,
   buildPathWithLang,
 } from '../routes';
+import './SignupPage.css';
 
 const SignupSchema = (t) => Yup.object({
   username: Yup.string()

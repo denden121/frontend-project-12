@@ -1,6 +1,10 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 
+const getErrorMessage = (error, fallback) => (
+  error?.response?.data?.message ?? error?.message ?? fallback
+);
+
 export const fetchChatData = createAsyncThunk(
   'chat/fetchChatData',
   async (token, { rejectWithValue }) => {
@@ -19,8 +23,7 @@ export const fetchChatData = createAsyncThunk(
         messages: messagesResponse.data,
       };
     } catch (error) {
-      const message = error.response?.data?.message ?? error.message ?? 'Ошибка загрузки данных чата';
-      return rejectWithValue(message);
+      return rejectWithValue(getErrorMessage(error, 'Ошибка загрузки данных чата'));
     }
   },
 );
@@ -37,8 +40,7 @@ export const sendMessage = createAsyncThunk(
       );
       return data;
     } catch (error) {
-      const message = error.response?.data?.message ?? error.message ?? 'Ошибка отправки сообщения';
-      return rejectWithValue(message);
+      return rejectWithValue(getErrorMessage(error, 'Ошибка отправки сообщения'));
     }
   },
 );
@@ -55,8 +57,7 @@ export const createChannel = createAsyncThunk(
       );
       return data;
     } catch (error) {
-      const message = error.response?.data?.message ?? error.message ?? 'Ошибка создания канала';
-      return rejectWithValue(message);
+      return rejectWithValue(getErrorMessage(error, 'Ошибка создания канала'));
     }
   },
 );
@@ -73,8 +74,7 @@ export const renameChannel = createAsyncThunk(
       );
       return data;
     } catch (error) {
-      const message = error.response?.data?.message ?? error.message ?? 'Ошибка переименования канала';
-      return rejectWithValue(message);
+      return rejectWithValue(getErrorMessage(error, 'Ошибка переименования канала'));
     }
   },
 );
@@ -90,8 +90,7 @@ export const removeChannel = createAsyncThunk(
       );
       return data;
     } catch (error) {
-      const message = error.response?.data?.message ?? error.message ?? 'Ошибка удаления канала';
-      return rejectWithValue(message);
+      return rejectWithValue(getErrorMessage(error, 'Ошибка удаления канала'));
     }
   },
 );

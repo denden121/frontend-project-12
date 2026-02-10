@@ -54,10 +54,20 @@ const ruTranslations = {
     confirmRemoveTitle: 'Удалить канал',
     confirmRemoveText: 'Уверены, что хотите удалить канал #{{name}}?',
     cancel: 'Отмена',
+    addChannelSuccess: 'Канал успешно создан',
+    renameChannelSuccess: 'Канал успешно переименован',
+    removeChannelSuccess: 'Канал успешно удалён',
   },
   errors: {
     pageNotFound: 'Страница не найдена',
     goHome: 'На главную',
+    networkError: 'Проблемы с сетью. Проверьте подключение.',
+    loadChatErrorToast: 'Не удалось загрузить чат',
+    sendMessageErrorToast: 'Не удалось отправить сообщение',
+    createChannelErrorToast: 'Не удалось создать канал',
+    renameChannelErrorToast: 'Не удалось переименовать канал',
+    removeChannelErrorToast: 'Не удалось удалить канал',
+    unknownError: 'Произошла неизвестная ошибка',
   },
 };
 
@@ -114,10 +124,20 @@ const enTranslations = {
     confirmRemoveTitle: 'Remove channel',
     confirmRemoveText: 'Are you sure you want to remove channel #{{name}}?',
     cancel: 'Cancel',
+    addChannelSuccess: 'Channel created successfully',
+    renameChannelSuccess: 'Channel renamed successfully',
+    removeChannelSuccess: 'Channel removed successfully',
   },
   errors: {
     pageNotFound: 'Page not found',
     goHome: 'Go home',
+    networkError: 'Network issues. Please check your connection.',
+    loadChatErrorToast: 'Failed to load chat',
+    sendMessageErrorToast: 'Failed to send message',
+    createChannelErrorToast: 'Failed to create channel',
+    renameChannelErrorToast: 'Failed to rename channel',
+    removeChannelErrorToast: 'Failed to remove channel',
+    unknownError: 'An unknown error occurred',
   },
 };
 
