@@ -12,6 +12,7 @@ import {
   renameChannel,
   removeChannel,
 } from '../slices/chatSlice';
+import { cleanText } from '../utils/profanity';
 
 export function AddChannelModal({
   isOpen,
@@ -45,7 +46,7 @@ export function AddChannelModal({
         onSubmit={async (values, { setSubmitting }) => {
           try {
             await dispatch(createChannel({
-              name: values.name.trim(),
+              name: cleanText(values.name.trim()),
               token,
             })).unwrap();
             toast.success(t('chat.addChannelSuccess'));
@@ -126,7 +127,7 @@ export function RenameChannelModal({
           try {
             await dispatch(renameChannel({
               id: channel.id,
-              name: values.name.trim(),
+              name: cleanText(values.name.trim()),
               token,
             })).unwrap();
             toast.success(t('chat.renameChannelSuccess'));

@@ -19,6 +19,7 @@ import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import NotFoundPage from './pages/NotFoundPage';
 import SignupPage from './pages/SignupPage';
+import BuggyTestButton from './pages/BuggyTestButton';
 import './App.css';
 import {
   ROUTES,
@@ -133,7 +134,12 @@ function Layout() {
         </Container>
       </Navbar>
       <Container className="mt-4 app-main">
-        <Outlet />
+        <div className="d-flex justify-content-between align-items-start gap-3">
+          <div className="flex-grow-1">
+            <Outlet />
+          </div>
+          <BuggyTestButton />
+        </div>
       </Container>
     </>
   );

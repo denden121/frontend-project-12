@@ -7,6 +7,7 @@ import {
 } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
+import { cleanText } from '../utils/profanity';
 import {
   fetchChatData,
   setCurrentChannelId,
@@ -200,7 +201,7 @@ function HomePage() {
                       {message.username}
                       :
                     </span>
-                    <span>{message.body}</span>
+                    <span>{cleanText(message.body)}</span>
                   </div>
                 ))}
                 {currentChannelMessages.length === 0 && <p>{t('chat.noMessages')}</p>}

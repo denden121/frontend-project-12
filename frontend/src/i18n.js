@@ -68,6 +68,7 @@ const ruTranslations = {
     renameChannelErrorToast: 'Не удалось переименовать канал',
     removeChannelErrorToast: 'Не удалось удалить канал',
     unknownError: 'Произошла неизвестная ошибка',
+    triggerTestError: 'Проверить отслеживание ошибок',
   },
 };
 
@@ -138,6 +139,7 @@ const enTranslations = {
     renameChannelErrorToast: 'Failed to rename channel',
     removeChannelErrorToast: 'Failed to remove channel',
     unknownError: 'An unknown error occurred',
+    triggerTestError: 'Trigger error tracking test',
   },
 };
 
