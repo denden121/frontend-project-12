@@ -98,7 +98,7 @@ function HomePage() {
   const existingNames = channels.map((c) => c.name.toLowerCase());
 
   return (
-    <div>
+    <div className="chat-page">
       {status === 'loading' && <p>Загрузка чата...</p>}
       {status === 'failed' && <p>{error}</p>}
 

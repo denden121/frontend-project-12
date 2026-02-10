@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
@@ -6,6 +7,7 @@ import {
   Button,
   Card,
   Form as RBForm,
+  InputGroup,
 } from 'react-bootstrap';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -26,10 +28,11 @@ const SignupSchema = Yup.object({
 function SignupPage() {
   const { signup } = useAuth();
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
 
   return (
     <div className="d-flex justify-content-center mt-5">
-      <Card style={{ minWidth: '320px', maxWidth: '400px' }}>
+      <Card style={{ width: '100%', maxWidth: '520px' }}>
         <Card.Body>
           <Card.Title className="mb-3">Регистрация</Card.Title>
           <Formik
@@ -60,7 +63,7 @@ function SignupPage() {
             }) => (
               <Form>
                 {status && (
-                  <Alert variant="danger" className="py-2">
+                  <Alert variant="danger" className="py-2 mb-3">
                     {status}
                   </Alert>
                 )}
@@ -79,17 +82,30 @@ function SignupPage() {
                 </RBForm.Group>
                 <RBForm.Group className="mb-3" controlId="signupPassword">
                   <RBForm.Label>Пароль</RBForm.Label>
-                  <Field
-                    name="password"
-                    as={RBForm.Control}
-                    type="password"
-                    autoComplete="new-password"
-                  />
+                  <InputGroup>
+                    <Field
+                      name="password"
+                      as={RBForm.Control}
+                      type={showPassword ? 'text' : 'password'}
+                      autoComplete="new-password"
+                    />
+                    <Button
+                      variant="outline-secondary"
+                      size="sm"
+                      type="button"
+                      onClick={() => setShowPassword((prev) => !prev)}
+                    >
+                      {showPassword ? 'Скрыть' : 'Показать'}
+                    </Button>
+                  </InputGroup>
+                  <div className="form-text text-muted mt-1">
+                    Не менее 6 символов
+                  </div>
                   {errors.password && touched.password && (
                     <div className="modal-error">{errors.password}</div>
                   )}
                 </RBForm.Group>
-                <RBForm.Group className="mb-3" controlId="signupConfirmPassword">
+                <RBForm.Group className="mb-4" controlId="signupConfirmPassword">
                   <RBForm.Label>Подтверждение пароля</RBForm.Label>
                   <Field
                     name="confirmPassword"

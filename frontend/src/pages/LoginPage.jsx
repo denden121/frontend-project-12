@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Formik, Form, Field } from 'formik';
 import {
@@ -5,16 +6,18 @@ import {
   Button,
   Card,
   Form as RBForm,
+  InputGroup,
 } from 'react-bootstrap';
 import { useAuth } from '../contexts/AuthContext';
 
 function LoginPage() {
   const { login } = useAuth();
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
 
   return (
     <div className="d-flex justify-content-center mt-5">
-      <Card style={{ minWidth: '320px', maxWidth: '400px' }}>
+      <Card style={{ width: '100%', maxWidth: '520px' }}>
         <Card.Body>
           <Card.Title className="mb-3">Вход</Card.Title>
           <Formik
@@ -33,7 +36,7 @@ function LoginPage() {
             {({ status }) => (
               <Form>
                 {status && (
-                  <Alert variant="danger" className="py-2">
+                  <Alert variant="danger" className="py-2 mb-3">
                     {status}
                   </Alert>
                 )}
@@ -47,14 +50,24 @@ function LoginPage() {
                     autoFocus
                   />
                 </RBForm.Group>
-                <RBForm.Group className="mb-3" controlId="loginPassword">
+                <RBForm.Group className="mb-4" controlId="loginPassword">
                   <RBForm.Label>Пароль</RBForm.Label>
-                  <Field
-                    name="password"
-                    as={RBForm.Control}
-                    type="password"
-                    autoComplete="current-password"
-                  />
+                  <InputGroup>
+                    <Field
+                      name="password"
+                      as={RBForm.Control}
+                      type={showPassword ? 'text' : 'password'}
+                      autoComplete="current-password"
+                    />
+                    <Button
+                      variant="outline-secondary"
+                      size="sm"
+                      type="button"
+                      onClick={() => setShowPassword((prev) => !prev)}
+                    >
+                      {showPassword ? 'Скрыть' : 'Показать'}
+                    </Button>
+                  </InputGroup>
                 </RBForm.Group>
                 <div className="d-flex justify-content-between align-items-center">
                   <Button variant="primary" type="submit">
