@@ -10,6 +10,7 @@ import {
   InputGroup,
 } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
 import { useAuth } from '../contexts/AuthContext';
 import {
   ROUTES,
@@ -55,7 +56,8 @@ function SignupPage() {
                 navigate(buildPathWithLang(ROUTES.home, lang), { replace: true });
               } catch (err) {
                 if (err.response?.status === 409) {
-                  setStatus(t('auth.userExists'));
+                  toast.error(t('auth.userExists'));
+                  navigate(buildPathWithLang(ROUTES.home, lang), { replace: true });
                 } else {
                   const message = err.response?.data?.message ?? err.message ?? t('auth.signupErrorFallback');
                   setStatus(message);

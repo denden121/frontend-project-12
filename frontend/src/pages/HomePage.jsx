@@ -149,6 +149,7 @@ function HomePage() {
                         className={`channels-list__item${
                           channel.id === currentChannelId ? ' channels-list__item--active' : ''
                         }`}
+                        aria-label={channel.name}
                       >
                         <span className="channels-list__name">
                           #
