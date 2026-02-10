@@ -1,10 +1,16 @@
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 function BuggyTestButton() {
   const { t } = useTranslation();
+  const [shouldThrow, setShouldThrow] = useState(false);
+
+  if (shouldThrow) {
+    throw new Error('Rollbar test error from BuggyTestButton');
+  }
 
   const handleClick = () => {
-    throw new Error('Rollbar test error from BuggyTestButton');
+    setShouldThrow(true);
   };
 
   return (

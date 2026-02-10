@@ -50,7 +50,7 @@ function LoginPage() {
                   </Alert>
                 )}
                 <RBForm.Group className="mb-3" controlId="loginUsername">
-                  <RBForm.Label>{t('auth.username')}</RBForm.Label>
+                  <RBForm.Label>{t('auth.nickname')}</RBForm.Label>
                   <Field
                     name="username"
                     as={RBForm.Control}

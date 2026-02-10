@@ -1,4 +1,8 @@
-.PHONY: build start
+.PHONY: install build start
+
+install:
+	npm ci
+	cd frontend && npm ci
 
 build:
 	cd frontend && npm run build
