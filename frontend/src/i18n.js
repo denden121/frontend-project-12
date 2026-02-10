@@ -61,14 +61,72 @@ const ruTranslations = {
   },
 };
 
+const enTranslations = {
+  app: {
+    title: 'Hexlet Chat',
+  },
+  auth: {
+    login: 'Log in',
+    signup: 'Sign up',
+    logout: 'Log out',
+    username: 'Username',
+    password: 'Password',
+    confirmPassword: 'Confirm password',
+    loginButton: 'Log in',
+    signupButton: 'Sign up',
+    haveAccount: 'I already have an account',
+    loginErrorFallback: 'Login error',
+    signupErrorFallback: 'Signup error',
+    userExists: 'User with this name already exists',
+    passwordHint: 'At least 6 characters',
+    showPassword: 'Show',
+    hidePassword: 'Hide',
+  },
+  validation: {
+    required: 'Required field',
+    usernameLength: 'From 3 to 20 characters',
+    passwordMin: 'At least 6 characters',
+    passwordsMustMatch: 'Passwords must match',
+    channelNameLength: 'From 3 to 20 characters',
+    mustBeUnique: 'Must be unique',
+  },
+  chat: {
+    loading: 'Loading chat…',
+    loadError: 'Failed to load chat',
+    offlineNotice: 'No connection. Messages may be delayed.',
+    channels: 'Channels',
+    selectChannel: 'Select a channel',
+    noMessages: 'No messages yet',
+    messageInputPlaceholder: 'Enter a message…',
+    messageInputAriaLabel: 'Message text',
+    send: 'Send',
+    sending: 'Sending…',
+    addChannel: 'Add channel',
+    renameChannel: 'Rename channel',
+    removeChannel: 'Remove channel',
+    channelName: 'Channel name',
+    newChannelPlaceholder: 'Channel name',
+    creating: 'Creating…',
+    create: 'Create',
+    saving: 'Saving…',
+    save: 'Save',
+    removing: 'Removing…',
+    confirmRemoveTitle: 'Remove channel',
+    confirmRemoveText: 'Are you sure you want to remove channel #{{name}}?',
+    cancel: 'Cancel',
+  },
+  errors: {
+    pageNotFound: 'Page not found',
+    goHome: 'Go home',
+  },
+};
+
 const resources = {
   ru: {
     translation: ruTranslations,
   },
-  // Пока тексты для en совпадают с ru.
-  // При необходимости можно добавить отдельные переводы.
   en: {
-    translation: ruTranslations,
+    translation: enTranslations,
   },
 };
 
