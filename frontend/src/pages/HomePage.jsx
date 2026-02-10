@@ -166,12 +166,11 @@ function HomePage() {
                           onToggle={(isOpen) => setMenuChannelId(isOpen ? channel.id : null)}
                         >
                           <Dropdown.Toggle
-                          size="sm"
-                          variant="outline-secondary"
-                          className="channels-list__menu-button"
-                          aria-label={t('chat.manageChannel')}
+                            size="sm"
+                            variant="outline-secondary"
+                            className="channels-list__menu-button"
                           >
-                          ⋯
+                            <span className="visually-hidden">{t('chat.manageChannel')}</span>
                           </Dropdown.Toggle>
                           <Dropdown.Menu align="end">
                             <Dropdown.Item

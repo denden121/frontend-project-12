@@ -37,8 +37,12 @@ function LoginPage() {
                 await login(values.username, values.password);
                 navigate(buildPathWithLang(ROUTES.home, lang), { replace: true });
               } catch (err) {
-                const message = err.response?.data?.message ?? err.message ?? t('auth.loginErrorFallback');
-                setStatus(message);
+                if (err.response?.status === 401) {
+                  setStatus(t('auth.invalidCredentials'));
+                } else {
+                  const message = err.response?.data?.message ?? err.message ?? t('auth.loginErrorFallback');
+                  setStatus(message);
+                }
               }
             }}
           >
