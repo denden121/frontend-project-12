@@ -4,11 +4,8 @@ import {
   Outlet,
   Link,
   useNavigate,
-  useLocation,
   Navigate,
-  useSearchParams,
 } from 'react-router-dom';
-import { useEffect } from 'react';
 import { Container, Navbar, Nav, Button } from 'react-bootstrap';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -26,46 +23,23 @@ import {
   ROUTE_SEGMENTS,
   SUPPORTED_LANGS,
   DEFAULT_LANG,
-  buildPathWithLang,
 } from './routes';
 
 function Layout() {
   const { isAuthenticated, username, logout } = useAuth();
   const navigate = useNavigate();
-  const location = useLocation();
-  const [searchParams, setSearchParams] = useSearchParams();
   const { t, i18n } = useTranslation();
 
-  const rawLang = searchParams.get('lang');
-  const lang = SUPPORTED_LANGS.includes(rawLang) ? rawLang : DEFAULT_LANG;
-
-  useEffect(() => {
-    if (!rawLang || !SUPPORTED_LANGS.includes(rawLang)) {
-      setSearchParams((prev) => {
-        const params = new URLSearchParams(prev);
-        params.set('lang', DEFAULT_LANG);
-        return params;
-      });
-    }
-
-    if (i18n.language !== lang) {
-      i18n.changeLanguage(lang);
-    }
-  }, [rawLang, lang, i18n, setSearchParams]);
+  const lang = i18n.language || DEFAULT_LANG;
 
   const handleLanguageChange = (nextLang) => {
     if (nextLang === lang) return;
-
-    setSearchParams((prev) => {
-      const params = new URLSearchParams(prev);
-      params.set('lang', nextLang);
-      return params;
-    });
+    i18n.changeLanguage(nextLang);
   };
 
   const handleLogout = () => {
     logout();
-    navigate(buildPathWithLang(ROUTES.login, lang));
+    navigate(ROUTES.login);
   };
 
   return (
@@ -74,7 +48,7 @@ function Layout() {
         <Container>
           <Navbar.Brand
             as={Link}
-            to={{ pathname: ROUTES.home, search: location.search }}
+            to={ROUTES.home}
           >
             {t('app.title')}
           </Navbar.Brand>
@@ -115,14 +89,14 @@ function Layout() {
                 <Nav>
                   <Nav.Link
                     as={Link}
-                    to={{ pathname: ROUTES.login, search: location.search }}
+                    to={ROUTES.login}
                     className="navbar-auth-link"
                   >
                     {t('auth.login')}
                   </Nav.Link>
                   <Nav.Link
                     as={Link}
-                    to={{ pathname: ROUTES.signup, search: location.search }}
+                    to={ROUTES.signup}
                     className="navbar-auth-link"
                   >
                     {t('auth.signup')}
@@ -164,7 +138,7 @@ function App() {
         </Route>
         <Route
           path="*"
-          element={<Navigate to={buildPathWithLang(ROUTES.home, DEFAULT_LANG)} replace />}
+          element={<Navigate to={ROUTES.home} replace />}
         />
       </Routes>
       <ToastContainer position="top-right" autoClose={4000} hideProgressBar={false} newestOnTop closeOnClick pauseOnFocusLoss draggable pauseOnHover theme="dark" />

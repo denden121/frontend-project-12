@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { io } from 'socket.io-client';
 import {
@@ -12,53 +12,56 @@ import {
 export function useSocket(enabled) {
   const dispatch = useDispatch();
   const socketRef = useRef(null);
+  const [socket, setSocket] = useState(null);
 
   useEffect(() => {
     if (!enabled) return;
 
-    const socket = io({
+    const s = io({
       path: '/socket.io',
       transports: ['websocket', 'polling'],
     });
 
-    socketRef.current = socket;
+    socketRef.current = s;
 
-    socket.on('connect', () => {
+    s.on('connect', () => {
+      setSocket(s);
       dispatch(setSocketConnected(true));
     });
 
-    socket.on('disconnect', () => {
+    s.on('disconnect', () => {
       dispatch(setSocketConnected(false));
     });
 
-    socket.on('newMessage', (payload) => {
+    s.on('newMessage', (payload) => {
       dispatch(addMessage(payload));
     });
 
-    socket.on('newChannel', (payload) => {
+    s.on('newChannel', (payload) => {
       dispatch(channelAdded(payload));
     });
 
-    socket.on('renameChannel', (payload) => {
+    s.on('renameChannel', (payload) => {
       dispatch(channelRenamed(payload));
     });
 
-    socket.on('removeChannel', (payload) => {
+    s.on('removeChannel', (payload) => {
       dispatch(channelRemoved(payload));
     });
 
     return () => {
-      socket.off('connect');
-      socket.off('disconnect');
-      socket.off('newMessage');
-      socket.off('newChannel');
-      socket.off('renameChannel');
-      socket.off('removeChannel');
-      socket.disconnect();
+      s.off('connect');
+      s.off('disconnect');
+      s.off('newMessage');
+      s.off('newChannel');
+      s.off('renameChannel');
+      s.off('removeChannel');
+      s.disconnect();
       socketRef.current = null;
+      setSocket(null);
       dispatch(setSocketConnected(false));
     };
   }, [enabled, dispatch]);
 
-  return socketRef.current;
+  return socket;
 }

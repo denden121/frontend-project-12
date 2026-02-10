@@ -12,9 +12,6 @@ import {
   fetchChatData,
   setCurrentChannelId,
   sendMessage,
-  createChannel,
-  renameChannel,
-  removeChannel,
 } from '../slices/chatSlice';
 import { useAuth } from '../contexts/AuthContext';
 import { useSocket } from '../hooks/useSocket';

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Formik, Form, Field } from 'formik';
 import {
   Alert,
@@ -10,19 +10,14 @@ import {
 } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
-import {
-  ROUTES,
-  DEFAULT_LANG,
-  buildPathWithLang,
-} from '../routes';
+import { ROUTES, buildPathWithLang, DEFAULT_LANG } from '../routes';
 
 function LoginPage() {
   const { login } = useAuth();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
-  const { t } = useTranslation();
-  const [searchParams] = useSearchParams();
-  const lang = searchParams.get('lang') || DEFAULT_LANG;
+  const { t, i18n } = useTranslation();
+  const lang = i18n.language || DEFAULT_LANG;
 
   return (
     <div className="d-flex justify-content-center mt-5">

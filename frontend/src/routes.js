@@ -12,8 +12,5 @@ export const ROUTES = {
   signup: `/${ROUTE_SEGMENTS.signup}`,
 };
 
-export const buildPathWithLang = (pathname, lang = DEFAULT_LANG) => ({
-  pathname,
-  search: `?lang=${lang}`,
-});
+export const buildPathWithLang = (pathname) => pathname;
 
