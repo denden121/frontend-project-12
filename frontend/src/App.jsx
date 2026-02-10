@@ -13,7 +13,6 @@ import { Container, Navbar, Nav, Button } from 'react-bootstrap';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useTranslation } from 'react-i18next';
-import { ErrorBoundary } from '@rollbar/react';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import HomePage from './pages/HomePage';
@@ -139,15 +138,7 @@ function Layout() {
           <div className="flex-grow-1">
             <Outlet />
           </div>
-          <ErrorBoundary
-            fallbackUI={(
-              <div className="text-danger small">
-                Rollbar test error was captured. Check your Rollbar dashboard.
-              </div>
-            )}
-          >
-            <BuggyTestButton />
-          </ErrorBoundary>
+          <BuggyTestButton />
         </div>
       </Container>
     </>

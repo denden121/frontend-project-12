@@ -1,24 +1,21 @@
-import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useRollbar } from '@rollbar/react';
+import { toast } from 'react-toastify';
 
 function BuggyTestButton() {
   const { t } = useTranslation();
-  const [shouldThrow, setShouldThrow] = useState(false);
-
-  if (shouldThrow) {
-    throw new Error('Rollbar test error from BuggyTestButton');
-  }
+  const rollbar = useRollbar();
 
   const handleClick = () => {
-    setShouldThrow(true);
+    rollbar.error('Rollbar test error from BuggyTestButton');
+    toast.info(t('errors.rollbarTestCaptured'));
   };
 
   return (
     <button type="button" className="btn btn-outline-danger btn-sm" onClick={handleClick}>
-      {t('errors.triggerTestError') || 'Trigger test error'}
+      {t('errors.triggerTestError')}
     </button>
   );
 }
 
 export default BuggyTestButton;
-

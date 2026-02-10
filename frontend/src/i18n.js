@@ -71,6 +71,7 @@ const ruTranslations = {
     removeChannelErrorToast: 'Не удалось удалить канал',
     unknownError: 'Произошла неизвестная ошибка',
     triggerTestError: 'Проверить отслеживание ошибок',
+    rollbarTestCaptured: 'Тестовая ошибка отправлена в Rollbar. Проверьте панель управления.',
   },
 };
 
@@ -144,6 +145,7 @@ const enTranslations = {
     removeChannelErrorToast: 'Failed to remove channel',
     unknownError: 'An unknown error occurred',
     triggerTestError: 'Trigger error tracking test',
+    rollbarTestCaptured: 'Rollbar test error was captured. Check your Rollbar dashboard.',
   },
 };
 
