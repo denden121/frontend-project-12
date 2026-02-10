@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
+import apiRoutes from '../apiRoutes';
 
 const getErrorMessage = (error, fallback) => (
   error?.response?.data?.message ?? error?.message ?? fallback
@@ -14,8 +15,8 @@ export const fetchChatData = createAsyncThunk(
       };
 
       const [channelsResponse, messagesResponse] = await Promise.all([
-        axios.get('/api/v1/channels', { headers }),
-        axios.get('/api/v1/messages', { headers }),
+        axios.get(apiRoutes.channels(), { headers }),
+        axios.get(apiRoutes.messages(), { headers }),
       ]);
 
       return {
@@ -34,7 +35,7 @@ export const sendMessage = createAsyncThunk(
     try {
       const headers = { Authorization: `Bearer ${token}` };
       const { data } = await axios.post(
-        '/api/v1/messages',
+        apiRoutes.messages(),
         { body, channelId, username },
         { headers },
       );
@@ -51,7 +52,7 @@ export const createChannel = createAsyncThunk(
     try {
       const headers = { Authorization: `Bearer ${token}` };
       const { data } = await axios.post(
-        '/api/v1/channels',
+        apiRoutes.channels(),
         { name },
         { headers },
       );
@@ -68,7 +69,7 @@ export const renameChannel = createAsyncThunk(
     try {
       const headers = { Authorization: `Bearer ${token}` };
       const { data } = await axios.patch(
-        `/api/v1/channels/${id}`,
+        apiRoutes.channel(id),
         { name },
         { headers },
       );
@@ -85,7 +86,7 @@ export const removeChannel = createAsyncThunk(
     try {
       const headers = { Authorization: `Bearer ${token}` };
       const { data } = await axios.delete(
-        `/api/v1/channels/${id}`,
+        apiRoutes.channel(id),
         { headers },
       );
       return data;

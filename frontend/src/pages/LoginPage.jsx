@@ -42,7 +42,7 @@ function LoginPage() {
               }
             }}
           >
-            {({ status }) => (
+            {({ status, isSubmitting }) => (
               <Form>
                 {status && (
                   <Alert variant="danger" className="py-2 mb-3">
@@ -79,7 +79,7 @@ function LoginPage() {
                   </InputGroup>
                 </RBForm.Group>
                 <div className="d-flex justify-content-between align-items-center">
-                  <Button variant="primary" type="submit">
+                  <Button variant="primary" type="submit" disabled={isSubmitting}>
                     {t('auth.loginButton')}
                   </Button>
                   <Link to={buildPathWithLang(ROUTES.signup, lang)}>

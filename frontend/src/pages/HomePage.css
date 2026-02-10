@@ -177,13 +177,4 @@
   margin-top: 0.75rem;
 }
 
-/* Bootstrap modal tweaks specific to chat */
-.modal-dialog {
-  margin: 1.75rem auto;
-}
-
-.modal-content {
-  background-color: #242424;
-  border-radius: 8px;
-}
 

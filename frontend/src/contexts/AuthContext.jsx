@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useCallback } from 'react';
 import axios from 'axios';
+import apiRoutes from '../apiRoutes';
 
 const STORAGE_KEY = 'chat_token';
 const USERNAME_KEY = 'chat_username';
@@ -18,7 +19,7 @@ export function AuthProvider({ children }) {
   }, []);
 
   const login = useCallback(async (loginUsername, password) => {
-    const { data } = await axios.post('/api/v1/login', {
+    const { data } = await axios.post(apiRoutes.login(), {
       username: loginUsername,
       password,
     });
@@ -26,7 +27,7 @@ export function AuthProvider({ children }) {
   }, [applyAuthData]);
 
   const signup = useCallback(async (newUsername, password) => {
-    const { data } = await axios.post('/api/v1/signup', {
+    const { data } = await axios.post(apiRoutes.signup(), {
       username: newUsername,
       password,
     });
