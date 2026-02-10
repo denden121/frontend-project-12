@@ -10,16 +10,28 @@ export function AuthProvider({ children }) {
   const [token, setToken] = useState(() => localStorage.getItem(STORAGE_KEY));
   const [username, setUsername] = useState(() => localStorage.getItem(USERNAME_KEY));
 
-  const login = useCallback(async (loginUsername, password) => {
-    const { data } = await axios.post('/api/v1/login', {
-      username: loginUsername,
-      password,
-    });
+  const applyAuthData = useCallback((data) => {
     localStorage.setItem(STORAGE_KEY, data.token);
     localStorage.setItem(USERNAME_KEY, data.username);
     setToken(data.token);
     setUsername(data.username);
   }, []);
+
+  const login = useCallback(async (loginUsername, password) => {
+    const { data } = await axios.post('/api/v1/login', {
+      username: loginUsername,
+      password,
+    });
+    applyAuthData(data);
+  }, [applyAuthData]);
+
+  const signup = useCallback(async (newUsername, password) => {
+    const { data } = await axios.post('/api/v1/signup', {
+      username: newUsername,
+      password,
+    });
+    applyAuthData(data);
+  }, [applyAuthData]);
 
   const logout = useCallback(() => {
     localStorage.removeItem(STORAGE_KEY);
@@ -34,6 +46,7 @@ export function AuthProvider({ children }) {
     token,
     username,
     login,
+    signup,
     logout,
     isAuthenticated,
   };

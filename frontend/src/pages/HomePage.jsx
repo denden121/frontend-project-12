@@ -1,17 +1,31 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Formik, Form, Field } from 'formik';
+import * as Yup from 'yup';
+import {
+  Alert,
+  Button,
+  Dropdown,
+  Modal,
+  Form as RBForm,
+} from 'react-bootstrap';
 import {
   fetchChatData,
   setCurrentChannelId,
   sendMessage,
+  createChannel,
+  renameChannel,
+  removeChannel,
 } from '../slices/chatSlice';
 import { useAuth } from '../contexts/AuthContext';
 import { useSocket } from '../hooks/useSocket';
 
 function HomePage() {
   const dispatch = useDispatch();
-  const { token, username, logout } = useAuth();
+  const { token, username } = useAuth();
   const [inputBody, setInputBody] = useState('');
+  const [menuChannelId, setMenuChannelId] = useState(null);
+  const [modal, setModal] = useState({ type: null, channelId: null });
 
   const {
     channels,
@@ -22,6 +36,10 @@ function HomePage() {
     sendStatus,
     sendError,
     socketConnected,
+    creatingChannel,
+    renamingChannelId,
+    removingChannelId,
+    channelsError,
   } = useSelector((state) => state.chat);
 
   useSocket(!!token && status === 'succeeded');
@@ -54,57 +72,115 @@ function HomePage() {
     });
   };
 
+  const openAddModal = () => {
+    setModal({ type: 'add', channelId: null });
+  };
+
+  const openRenameModal = (channelId) => {
+    setModal({ type: 'rename', channelId });
+  };
+
+  const openRemoveModal = (channelId) => {
+    setModal({ type: 'remove', channelId });
+  };
+
+  const closeModal = () => {
+    setModal({ type: null, channelId: null });
+  };
+
   const currentChannel = channels.find((channel) => channel.id === currentChannelId) ?? null;
   const currentChannelMessages = messages.filter(
     (message) => message.channelId === currentChannelId,
   );
   const isSending = sendStatus === 'loading';
+  const activeModalChannel = channels.find((c) => c.id === modal.channelId) ?? null;
+
+  const existingNames = channels.map((c) => c.name.toLowerCase());
 
   return (
     <div>
-      <header style={{ marginBottom: '1rem', display: 'flex', justifyContent: 'space-between' }}>
-        <h1>Чат</h1>
-        <p>
-          {username}
-          {' · '}
-          <button type="button" onClick={logout}>
-            Выйти
-          </button>
-        </p>
-      </header>
-
       {status === 'loading' && <p>Загрузка чата...</p>}
       {status === 'failed' && <p>{error}</p>}
 
       {status === 'succeeded' && (
         <>
           {!socketConnected && (
-            <p className="chat-status chat-status--offline">Нет соединения. Сообщения могут приходить с задержкой.</p>
+            <p className="chat-status chat-status--offline">
+              Нет соединения. Сообщения могут приходить с задержкой.
+            </p>
           )}
           <div className="chat-layout">
             <aside className="chat-layout__sidebar">
-              <h2>Каналы</h2>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                <h2 style={{ margin: 0 }}>Каналы</h2>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="outline-primary"
+                  onClick={openAddModal}
+                >
+                  +
+                </Button>
+              </div>
               <ul className="channels-list">
                 {channels.map((channel) => (
                   <li key={channel.id}>
-                    <button
-                      type="button"
-                      onClick={() => handleSelectChannel(channel.id)}
-                      className={`channels-list__item${channel.id === currentChannelId ? ' channels-list__item--active' : ''}`}
-                    >
-                      {channel.name}
-                    </button>
+                    <div className="channels-list__item-wrapper">
+                      <button
+                        type="button"
+                        onClick={() => handleSelectChannel(channel.id)}
+                        className={`channels-list__item${
+                          channel.id === currentChannelId ? ' channels-list__item--active' : ''
+                        }`}
+                      >
+                        <span className="channels-list__name">
+                          #
+                          {' '}
+                          {channel.name}
+                        </span>
+                      </button>
+                      {channel.removable && (
+                        <Dropdown
+                          className="channels-list__menu"
+                          show={menuChannelId === channel.id}
+                          onToggle={(isOpen) => setMenuChannelId(isOpen ? channel.id : null)}
+                        >
+                          <Dropdown.Toggle
+                            size="sm"
+                            variant="outline-secondary"
+                            className="channels-list__menu-button"
+                          >
+                            ⋯
+                          </Dropdown.Toggle>
+                          <Dropdown.Menu align="end">
+                            <Dropdown.Item
+                              onClick={() => openRenameModal(channel.id)}
+                            >
+                              Переименовать
+                            </Dropdown.Item>
+                            <Dropdown.Item
+                              onClick={() => openRemoveModal(channel.id)}
+                            >
+                              Удалить
+                            </Dropdown.Item>
+                          </Dropdown.Menu>
+                        </Dropdown>
+                      )}
+                    </div>
                   </li>
                 ))}
               </ul>
             </aside>
 
             <main className="chat-layout__main">
-              <h2>{currentChannel ? currentChannel.name : 'Выберите канал'}</h2>
+              <h2>{currentChannel ? `# ${currentChannel.name}` : 'Выберите канал'}</h2>
               <div className="chat-messages">
                 {currentChannelMessages.map((message) => (
                   <div key={message.id} className="chat-message">
-                    <span className="chat-message__author">{message.username}:</span>
+                    <span className="chat-message__author">
+                      {message.username}
+                      :
+                    </span>
                     <span>{message.body}</span>
                   </div>
                 ))}
@@ -113,9 +189,9 @@ function HomePage() {
 
               <form className="chat-form" onSubmit={handleSubmit}>
                 {sendError && (
-                  <div className="chat-form__error" role="alert">
+                  <Alert variant="danger" className="chat-form__error" role="alert">
                     {sendError}
-                  </div>
+                  </Alert>
                 )}
                 <div className="chat-form__row">
                   <input
@@ -137,9 +213,245 @@ function HomePage() {
               </form>
             </main>
           </div>
+
+          <AddChannelModal
+            isOpen={modal.type === 'add'}
+            onClose={closeModal}
+            existingNames={existingNames}
+            creating={creatingChannel}
+            error={channelsError}
+            token={token}
+            dispatch={dispatch}
+          />
+          {activeModalChannel && modal.type === 'rename' && (
+            <RenameChannelModal
+              channel={activeModalChannel}
+              onClose={closeModal}
+              existingNames={existingNames.filter(
+                (name) => name !== activeModalChannel.name.toLowerCase(),
+              )}
+              renamingChannelId={renamingChannelId}
+              error={channelsError}
+              token={token}
+              dispatch={dispatch}
+            />
+          )}
+          {activeModalChannel && modal.type === 'remove' && (
+            <RemoveChannelModal
+              channel={activeModalChannel}
+              onClose={closeModal}
+              removingChannelId={removingChannelId}
+              error={channelsError}
+              token={token}
+              dispatch={dispatch}
+            />
+          )}
         </>
       )}
     </div>
+  );
+}
+
+function AddChannelModal({
+  isOpen,
+  onClose,
+  existingNames,
+  creating,
+  error,
+  token,
+  dispatch,
+}) {
+  if (!isOpen) return null;
+
+  const schema = Yup.object({
+    name: Yup.string()
+      .trim()
+      .min(3, 'От 3 до 20 символов')
+      .max(20, 'От 3 до 20 символов')
+      .notOneOf(existingNames, 'Должно быть уникальным')
+      .required('Обязательное поле'),
+  });
+
+  return (
+    <Modal show={isOpen} onHide={onClose} centered>
+      <Modal.Header closeButton>
+        <Modal.Title>Добавить канал</Modal.Title>
+      </Modal.Header>
+      <Formik
+        initialValues={{ name: '' }}
+        validationSchema={schema}
+        onSubmit={async (values, { setSubmitting }) => {
+          try {
+            await dispatch(createChannel({
+              name: values.name.trim(),
+              token,
+            })).unwrap();
+            onClose();
+          } finally {
+            setSubmitting(false);
+          }
+        }}
+      >
+        {({ errors, touched, isSubmitting }) => (
+          <Form>
+            <Modal.Body>
+              <RBForm.Group className="modal-field" controlId="newChannelName">
+                <RBForm.Label>Имя канала</RBForm.Label>
+                <Field
+                  name="name"
+                  as={RBForm.Control}
+                  autoFocus
+                  placeholder="Имя канала"
+                />
+                {errors.name && touched.name && (
+                  <div className="modal-error">{errors.name}</div>
+                )}
+              </RBForm.Group>
+              {error && <div className="modal-error">{error}</div>}
+            </Modal.Body>
+            <Modal.Footer className="modal-actions">
+              <Button variant="secondary" type="button" onClick={onClose}>
+                Отмена
+              </Button>
+              <Button
+                variant="primary"
+                type="submit"
+                disabled={isSubmitting || creating}
+              >
+                {creating ? 'Создание…' : 'Создать'}
+              </Button>
+            </Modal.Footer>
+          </Form>
+        )}
+      </Formik>
+    </Modal>
+  );
+}
+
+function RenameChannelModal({
+  channel,
+  onClose,
+  existingNames,
+  renamingChannelId,
+  error,
+  token,
+  dispatch,
+}) {
+  if (!channel) return null;
+
+  const schema = Yup.object({
+    name: Yup.string()
+      .trim()
+      .min(3, 'От 3 до 20 символов')
+      .max(20, 'От 3 до 20 символов')
+      .notOneOf(existingNames, 'Должно быть уникальным')
+      .required('Обязательное поле'),
+  });
+
+  const isRenaming = renamingChannelId === channel.id;
+
+  return (
+    <Modal show onHide={onClose} centered>
+      <Modal.Header closeButton>
+        <Modal.Title>Переименовать канал</Modal.Title>
+      </Modal.Header>
+      <Formik
+        initialValues={{ name: channel.name }}
+        validationSchema={schema}
+        onSubmit={async (values, { setSubmitting }) => {
+          try {
+            await dispatch(renameChannel({
+              id: channel.id,
+              name: values.name.trim(),
+              token,
+            })).unwrap();
+            onClose();
+          } finally {
+            setSubmitting(false);
+          }
+        }}
+      >
+        {({ errors, touched, isSubmitting }) => (
+          <Form>
+            <Modal.Body>
+              <RBForm.Group className="modal-field" controlId="renameChannelName">
+                <RBForm.Label>Имя канала</RBForm.Label>
+                <Field
+                  name="name"
+                  as={RBForm.Control}
+                  autoFocus
+                />
+                {errors.name && touched.name && (
+                  <div className="modal-error">{errors.name}</div>
+                )}
+              </RBForm.Group>
+              {error && <div className="modal-error">{error}</div>}
+            </Modal.Body>
+            <Modal.Footer className="modal-actions">
+              <Button variant="secondary" type="button" onClick={onClose}>
+                Отмена
+              </Button>
+              <Button
+                variant="primary"
+                type="submit"
+                disabled={isSubmitting || isRenaming}
+              >
+                {isRenaming ? 'Сохранение…' : 'Сохранить'}
+              </Button>
+            </Modal.Footer>
+          </Form>
+        )}
+      </Formik>
+    </Modal>
+  );
+}
+
+function RemoveChannelModal({
+  channel,
+  onClose,
+  removingChannelId,
+  error,
+  token,
+  dispatch,
+}) {
+  if (!channel) return null;
+
+  const isRemoving = removingChannelId === channel.id;
+
+  const handleRemove = async () => {
+    await dispatch(removeChannel({ id: channel.id, token })).unwrap();
+    onClose();
+  };
+
+  return (
+    <Modal show onHide={onClose} centered>
+      <Modal.Header closeButton>
+        <Modal.Title>Удалить канал</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <p>
+          Уверены, что хотите удалить канал
+          {' '}
+          #
+          {channel.name}
+          ?
+        </p>
+        {error && <div className="modal-error">{error}</div>}
+      </Modal.Body>
+      <Modal.Footer className="modal-actions">
+        <Button variant="secondary" type="button" onClick={onClose}>
+          Отмена
+        </Button>
+        <Button
+          variant="danger"
+          type="button"
+          onClick={handleRemove}
+          disabled={isRemoving}
+        >
+          {isRemoving ? 'Удаление…' : 'Удалить'}
+        </Button>
+      </Modal.Footer>
+    </Modal>
   );
 }
 

@@ -1,7 +1,13 @@
 import { useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { io } from 'socket.io-client';
-import { addMessage, setSocketConnected } from '../slices/chatSlice';
+import {
+  addMessage,
+  channelAdded,
+  channelRemoved,
+  channelRenamed,
+  setSocketConnected,
+} from '../slices/chatSlice';
 
 export function useSocket(enabled) {
   const dispatch = useDispatch();
@@ -29,10 +35,25 @@ export function useSocket(enabled) {
       dispatch(addMessage(payload));
     });
 
+    socket.on('newChannel', (payload) => {
+      dispatch(channelAdded(payload));
+    });
+
+    socket.on('renameChannel', (payload) => {
+      dispatch(channelRenamed(payload));
+    });
+
+    socket.on('removeChannel', (payload) => {
+      dispatch(channelRemoved(payload));
+    });
+
     return () => {
       socket.off('connect');
       socket.off('disconnect');
       socket.off('newMessage');
+      socket.off('newChannel');
+      socket.off('renameChannel');
+      socket.off('removeChannel');
       socket.disconnect();
       socketRef.current = null;
       dispatch(setSocketConnected(false));
