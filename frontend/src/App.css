@@ -270,3 +270,19 @@
   gap: 0.5rem;
   margin-top: 0.75rem;
 }
+
+/* Navbar: fix button widths so layout doesn't jump on language change */
+.navbar-lang-switcher .btn {
+  width: 44px;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
+.navbar-auth-button {
+  min-width: 7.5rem;
+}
+
+.navbar-auth-link {
+  min-width: 6.5rem;
+  text-align: center;
+}

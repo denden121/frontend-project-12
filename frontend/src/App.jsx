@@ -78,7 +78,7 @@ function Layout() {
           <Navbar.Toggle aria-controls="main-navbar" />
           <Navbar.Collapse id="main-navbar" className="justify-content-end">
             <div className="d-flex align-items-center gap-3">
-              <div className="btn-group" role="group" aria-label="Language switcher">
+              <div className="btn-group navbar-lang-switcher" role="group" aria-label="Language switcher">
                 <Button
                   variant={lang === 'ru' ? 'outline-light' : 'outline-secondary'}
                   size="sm"
@@ -99,7 +99,12 @@ function Layout() {
               {isAuthenticated ? (
                 <div className="d-flex align-items-center gap-2">
                   <span>{username}</span>
-                  <Button variant="outline-light" size="sm" onClick={handleLogout}>
+                  <Button
+                    variant="outline-light"
+                    size="sm"
+                    className="navbar-auth-button"
+                    onClick={handleLogout}
+                  >
                     {t('auth.logout')}
                   </Button>
                 </div>
@@ -108,12 +113,14 @@ function Layout() {
                   <Nav.Link
                     as={Link}
                     to={{ pathname: ROUTES.login, search: location.search }}
+                    className="navbar-auth-link"
                   >
                     {t('auth.login')}
                   </Nav.Link>
                   <Nav.Link
                     as={Link}
                     to={{ pathname: ROUTES.signup, search: location.search }}
+                    className="navbar-auth-link"
                   >
                     {t('auth.signup')}
                   </Nav.Link>
