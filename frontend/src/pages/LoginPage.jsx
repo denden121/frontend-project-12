@@ -31,10 +31,12 @@ function LoginPage() {
               try {
                 await login(values.username, values.password)
                 navigate(buildPathWithLang(ROUTES.home, lang), { replace: true })
-              } catch (err) {
+              }
+              catch (err) {
                 if (err.response?.status === 401) {
                   setStatus(t('auth.invalidCredentials'))
-                } else {
+                }
+                else {
                   const message = err.response?.data?.message ?? err.message ?? t('auth.loginErrorFallback')
                   setStatus(message)
                 }
@@ -73,7 +75,9 @@ function LoginPage() {
                       type="button"
                       onClick={() => setShowPassword(prev => !prev)}
                     >
-                      {showPassword ? t('auth.hidePassword') : t('auth.showPassword')}
+                      {showPassword
+                        ? t('auth.hidePassword')
+                        : t('auth.showPassword')}
                     </Button>
                   </InputGroup>
                 </RBForm.Group>

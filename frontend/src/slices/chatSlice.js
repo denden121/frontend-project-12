@@ -23,7 +23,8 @@ export const fetchChatData = createAsyncThunk(
         channels: channelsResponse.data,
         messages: messagesResponse.data,
       }
-    } catch (error) {
+    }
+    catch (error) {
       return rejectWithValue(getErrorMessage(error, 'Ошибка загрузки данных чата'))
     }
   },
@@ -40,7 +41,8 @@ export const sendMessage = createAsyncThunk(
         { headers },
       )
       return data
-    } catch (error) {
+    }
+    catch (error) {
       return rejectWithValue(getErrorMessage(error, 'Ошибка отправки сообщения'))
     }
   },
@@ -57,7 +59,8 @@ export const createChannel = createAsyncThunk(
         { headers },
       )
       return data
-    } catch (error) {
+    }
+    catch (error) {
       return rejectWithValue(getErrorMessage(error, 'Ошибка создания канала'))
     }
   },
@@ -74,7 +77,8 @@ export const renameChannel = createAsyncThunk(
         { headers },
       )
       return data
-    } catch (error) {
+    }
+    catch (error) {
       return rejectWithValue(getErrorMessage(error, 'Ошибка переименования канала'))
     }
   },
@@ -90,7 +94,8 @@ export const removeChannel = createAsyncThunk(
         { headers },
       )
       return data
-    } catch (error) {
+    }
+    catch (error) {
       return rejectWithValue(getErrorMessage(error, 'Ошибка удаления канала'))
     }
   },
@@ -146,7 +151,8 @@ const chatSlice = createSlice({
       if (existing) {
         existing.name = normalized.name
         existing.removable = normalized.removable
-      } else {
+      }
+      else {
         state.channels.push(normalized)
       }
     },

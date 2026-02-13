@@ -51,7 +51,8 @@ export function AddChannelModal({
             })).unwrap()
             toast.success(t('chat.addChannelSuccess'))
             onClose()
-          } finally {
+          }
+          finally {
             setSubmitting(false)
           }
         }}
@@ -132,7 +133,8 @@ export function RenameChannelModal({
             })).unwrap()
             toast.success(t('chat.renameChannelSuccess'))
             onClose()
-          } finally {
+          }
+          finally {
             setSubmitting(false)
           }
         }}

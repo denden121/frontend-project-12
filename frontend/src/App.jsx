@@ -21,7 +21,6 @@ import './App.css'
 import {
   ROUTES,
   ROUTE_SEGMENTS,
-  SUPPORTED_LANGS,
   DEFAULT_LANG,
 } from './routes'
 

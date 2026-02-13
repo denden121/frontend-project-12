@@ -54,15 +54,18 @@ function SignupPage() {
               try {
                 await signup(values.username.trim(), values.password)
                 navigate(buildPathWithLang(ROUTES.home, lang), { replace: true })
-              } catch (err) {
+              }
+              catch (err) {
                 if (err.response?.status === 409) {
                   toast.error(t('auth.userExists'))
                   navigate(buildPathWithLang(ROUTES.home, lang), { replace: true })
-                } else {
+                }
+                else {
                   const message = err.response?.data?.message ?? err.message ?? t('auth.signupErrorFallback')
                   setStatus(message)
                 }
-              } finally {
+              }
+              finally {
                 setSubmitting(false)
               }
             }}

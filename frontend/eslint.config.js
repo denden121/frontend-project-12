@@ -28,11 +28,13 @@ export default defineConfig([
     },
     rules: {
       'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
+      '@stylistic/indent': ['error', 2],
       '@stylistic/semi': ['error', 'never'],
       '@stylistic/arrow-parens': ['error', 'as-needed', { requireForBlockBody: true }],
       '@stylistic/padded-blocks': ['error', 'never'],
       '@stylistic/no-multiple-empty-lines': ['error', { max: 1, maxEOF: 0 }],
       '@stylistic/no-trailing-spaces': 'error',
+      '@stylistic/brace-style': ['error', 'stroustrup'],
     },
   },
 ])
