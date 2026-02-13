@@ -110,9 +110,11 @@ function SignupPage() {
                       {showPassword ? t('auth.hidePassword') : t('auth.showPassword')}
                     </Button>
                   </InputGroup>
-                  <div className="form-text text-muted mt-1">
-                    {t('auth.passwordHint')}
-                  </div>
+                  {!errors.password && (
+                    <div className="form-text text-muted mt-1">
+                      {t('auth.passwordHint')}
+                    </div>
+                  )}
                   {errors.password && touched.password && (
                     <div className="modal-error">{errors.password}</div>
                   )}
