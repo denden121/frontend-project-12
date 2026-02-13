@@ -72,36 +72,38 @@ function Layout() {
                   EN
                 </Button>
               </div>
-              {isAuthenticated ? (
-                <div className="d-flex align-items-center gap-2">
-                  <span>{username}</span>
-                  <Button
-                    variant="outline-light"
-                    size="sm"
-                    className="navbar-auth-button"
-                    onClick={handleLogout}
-                  >
-                    {t('auth.logout')}
-                  </Button>
-                </div>
-              ) : (
-                <Nav>
-                  <Nav.Link
-                    as={Link}
-                    to={ROUTES.login}
-                    className="navbar-auth-link"
-                  >
-                    {t('auth.login')}
-                  </Nav.Link>
-                  <Nav.Link
-                    as={Link}
-                    to={ROUTES.signup}
-                    className="navbar-auth-link"
-                  >
-                    {t('auth.signup')}
-                  </Nav.Link>
-                </Nav>
-              )}
+              {isAuthenticated
+                ? (
+                    <div className="d-flex align-items-center gap-2">
+                      <span>{username}</span>
+                      <Button
+                        variant="outline-light"
+                        size="sm"
+                        className="navbar-auth-button"
+                        onClick={handleLogout}
+                      >
+                        {t('auth.logout')}
+                      </Button>
+                    </div>
+                  )
+                : (
+                    <Nav>
+                      <Nav.Link
+                        as={Link}
+                        to={ROUTES.login}
+                        className="navbar-auth-link"
+                      >
+                        {t('auth.login')}
+                      </Nav.Link>
+                      <Nav.Link
+                        as={Link}
+                        to={ROUTES.signup}
+                        className="navbar-auth-link"
+                      >
+                        {t('auth.signup')}
+                      </Nav.Link>
+                    </Nav>
+                  )}
             </div>
           </Navbar.Collapse>
         </Container>
