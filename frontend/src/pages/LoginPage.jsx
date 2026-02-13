@@ -1,23 +1,23 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Formik, Form, Field } from 'formik';
+import { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { Formik, Form, Field } from 'formik'
 import {
   Alert,
   Button,
   Card,
   Form as RBForm,
   InputGroup,
-} from 'react-bootstrap';
-import { useTranslation } from 'react-i18next';
-import { useAuth } from '../contexts/AuthContext';
-import { ROUTES, buildPathWithLang, DEFAULT_LANG } from '../routes';
+} from 'react-bootstrap'
+import { useTranslation } from 'react-i18next'
+import { useAuth } from '../contexts/AuthContext'
+import { ROUTES, buildPathWithLang, DEFAULT_LANG } from '../routes'
 
 function LoginPage() {
-  const { login } = useAuth();
-  const navigate = useNavigate();
-  const [showPassword, setShowPassword] = useState(false);
-  const { t, i18n } = useTranslation();
-  const lang = i18n.language || DEFAULT_LANG;
+  const { login } = useAuth()
+  const navigate = useNavigate()
+  const [showPassword, setShowPassword] = useState(false)
+  const { t, i18n } = useTranslation()
+  const lang = i18n.language || DEFAULT_LANG
 
   return (
     <div className="d-flex justify-content-center mt-5">
@@ -27,16 +27,16 @@ function LoginPage() {
           <Formik
             initialValues={{ username: '', password: '' }}
             onSubmit={async (values, { setStatus }) => {
-              setStatus(null);
+              setStatus(null)
               try {
-                await login(values.username, values.password);
-                navigate(buildPathWithLang(ROUTES.home, lang), { replace: true });
+                await login(values.username, values.password)
+                navigate(buildPathWithLang(ROUTES.home, lang), { replace: true })
               } catch (err) {
                 if (err.response?.status === 401) {
-                  setStatus(t('auth.invalidCredentials'));
+                  setStatus(t('auth.invalidCredentials'))
                 } else {
-                  const message = err.response?.data?.message ?? err.message ?? t('auth.loginErrorFallback');
-                  setStatus(message);
+                  const message = err.response?.data?.message ?? err.message ?? t('auth.loginErrorFallback')
+                  setStatus(message)
                 }
               }
             }}
@@ -71,7 +71,7 @@ function LoginPage() {
                       variant="outline-secondary"
                       size="sm"
                       type="button"
-                      onClick={() => setShowPassword((prev) => !prev)}
+                      onClick={() => setShowPassword(prev => !prev)}
                     >
                       {showPassword ? t('auth.hidePassword') : t('auth.showPassword')}
                     </Button>
@@ -91,7 +91,7 @@ function LoginPage() {
         </Card.Body>
       </Card>
     </div>
-  );
+  )
 }
 
-export default LoginPage;
+export default LoginPage

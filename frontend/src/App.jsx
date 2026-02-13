@@ -5,42 +5,42 @@ import {
   Link,
   useNavigate,
   Navigate,
-} from 'react-router-dom';
-import { Container, Navbar, Nav, Button } from 'react-bootstrap';
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { useTranslation } from 'react-i18next';
-import { AuthProvider, useAuth } from './contexts/AuthContext';
-import ProtectedRoute from './components/ProtectedRoute';
-import HomePage from './pages/HomePage';
-import LoginPage from './pages/LoginPage';
-import NotFoundPage from './pages/NotFoundPage';
-import SignupPage from './pages/SignupPage';
-import BuggyTestButton from './pages/BuggyTestButton';
-import './App.css';
+} from 'react-router-dom'
+import { Container, Navbar, Nav, Button } from 'react-bootstrap'
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+import { useTranslation } from 'react-i18next'
+import { AuthProvider, useAuth } from './contexts/AuthContext'
+import ProtectedRoute from './components/ProtectedRoute'
+import HomePage from './pages/HomePage'
+import LoginPage from './pages/LoginPage'
+import NotFoundPage from './pages/NotFoundPage'
+import SignupPage from './pages/SignupPage'
+import BuggyTestButton from './pages/BuggyTestButton'
+import './App.css'
 import {
   ROUTES,
   ROUTE_SEGMENTS,
   SUPPORTED_LANGS,
   DEFAULT_LANG,
-} from './routes';
+} from './routes'
 
 function Layout() {
-  const { isAuthenticated, username, logout } = useAuth();
-  const navigate = useNavigate();
-  const { t, i18n } = useTranslation();
+  const { isAuthenticated, username, logout } = useAuth()
+  const navigate = useNavigate()
+  const { t, i18n } = useTranslation()
 
-  const lang = i18n.language || DEFAULT_LANG;
+  const lang = i18n.language || DEFAULT_LANG
 
   const handleLanguageChange = (nextLang) => {
-    if (nextLang === lang) return;
-    i18n.changeLanguage(nextLang);
-  };
+    if (nextLang === lang) return
+    i18n.changeLanguage(nextLang)
+  }
 
   const handleLogout = () => {
-    logout();
-    navigate(ROUTES.login);
-  };
+    logout()
+    navigate(ROUTES.login)
+  }
 
   return (
     <>
@@ -116,7 +116,7 @@ function Layout() {
         </div>
       </Container>
     </>
-  );
+  )
 }
 
 function App() {
@@ -143,7 +143,7 @@ function App() {
       </Routes>
       <ToastContainer position="top-right" autoClose={4000} hideProgressBar={false} newestOnTop closeOnClick pauseOnFocusLoss draggable pauseOnHover theme="dark" />
     </AuthProvider>
-  );
+  )
 }
 
-export default App;
+export default App

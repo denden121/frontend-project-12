@@ -1,10 +1,10 @@
-import { Link, useLocation } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
-import { ROUTES } from '../routes';
+import { Link, useLocation } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
+import { ROUTES } from '../routes'
 
 function NotFoundPage() {
-  const { t } = useTranslation();
-  const location = useLocation();
+  const { t } = useTranslation()
+  const location = useLocation()
 
   return (
     <div>
@@ -16,7 +16,7 @@ function NotFoundPage() {
         </Link>
       </p>
     </div>
-  );
+  )
 }
 
-export default NotFoundPage;
+export default NotFoundPage

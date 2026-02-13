@@ -1,12 +1,12 @@
-import { Navigate, useLocation, useSearchParams } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
-import { ROUTES, DEFAULT_LANG, buildPathWithLang } from '../routes';
+import { Navigate, useLocation, useSearchParams } from 'react-router-dom'
+import { useAuth } from '../contexts/AuthContext'
+import { ROUTES, DEFAULT_LANG, buildPathWithLang } from '../routes'
 
 function ProtectedRoute({ children }) {
-  const { isAuthenticated } = useAuth();
-  const location = useLocation();
-  const [searchParams] = useSearchParams();
-  const lang = searchParams.get('lang') || DEFAULT_LANG;
+  const { isAuthenticated } = useAuth()
+  const location = useLocation()
+  const [searchParams] = useSearchParams()
+  const lang = searchParams.get('lang') || DEFAULT_LANG
 
   if (!isAuthenticated) {
     return (
@@ -15,10 +15,10 @@ function ProtectedRoute({ children }) {
         state={{ from: location }}
         replace
       />
-    );
+    )
   }
 
-  return children;
+  return children
 }
 
-export default ProtectedRoute;
+export default ProtectedRoute

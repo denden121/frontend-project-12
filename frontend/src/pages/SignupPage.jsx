@@ -1,25 +1,25 @@
-import { useState } from 'react';
-import { useNavigate, Link, useSearchParams } from 'react-router-dom';
-import { Formik, Form, Field } from 'formik';
-import * as Yup from 'yup';
+import { useState } from 'react'
+import { useNavigate, Link, useSearchParams } from 'react-router-dom'
+import { Formik, Form, Field } from 'formik'
+import * as Yup from 'yup'
 import {
   Alert,
   Button,
   Card,
   Form as RBForm,
   InputGroup,
-} from 'react-bootstrap';
-import { useTranslation } from 'react-i18next';
-import { toast } from 'react-toastify';
-import { useAuth } from '../contexts/AuthContext';
+} from 'react-bootstrap'
+import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
+import { useAuth } from '../contexts/AuthContext'
 import {
   ROUTES,
   DEFAULT_LANG,
   buildPathWithLang,
-} from '../routes';
-import './SignupPage.css';
+} from '../routes'
+import './SignupPage.css'
 
-const SignupSchema = (t) => Yup.object({
+const SignupSchema = t => Yup.object({
   username: Yup.string()
     .trim()
     .min(3, t('validation.usernameLength'))
@@ -31,15 +31,15 @@ const SignupSchema = (t) => Yup.object({
   confirmPassword: Yup.string()
     .oneOf([Yup.ref('password')], t('validation.passwordsMustMatch'))
     .required(t('validation.required')),
-});
+})
 
 function SignupPage() {
-  const { signup } = useAuth();
-  const navigate = useNavigate();
-  const [showPassword, setShowPassword] = useState(false);
-  const { t } = useTranslation();
-  const [searchParams] = useSearchParams();
-  const lang = searchParams.get('lang') || DEFAULT_LANG;
+  const { signup } = useAuth()
+  const navigate = useNavigate()
+  const [showPassword, setShowPassword] = useState(false)
+  const { t } = useTranslation()
+  const [searchParams] = useSearchParams()
+  const lang = searchParams.get('lang') || DEFAULT_LANG
 
   return (
     <div className="d-flex justify-content-center mt-5">
@@ -50,20 +50,20 @@ function SignupPage() {
             initialValues={{ username: '', password: '', confirmPassword: '' }}
             validationSchema={SignupSchema(t)}
             onSubmit={async (values, { setStatus, setSubmitting }) => {
-              setStatus(null);
+              setStatus(null)
               try {
-                await signup(values.username.trim(), values.password);
-                navigate(buildPathWithLang(ROUTES.home, lang), { replace: true });
+                await signup(values.username.trim(), values.password)
+                navigate(buildPathWithLang(ROUTES.home, lang), { replace: true })
               } catch (err) {
                 if (err.response?.status === 409) {
-                  toast.error(t('auth.userExists'));
-                  navigate(buildPathWithLang(ROUTES.home, lang), { replace: true });
+                  toast.error(t('auth.userExists'))
+                  navigate(buildPathWithLang(ROUTES.home, lang), { replace: true })
                 } else {
-                  const message = err.response?.data?.message ?? err.message ?? t('auth.signupErrorFallback');
-                  setStatus(message);
+                  const message = err.response?.data?.message ?? err.message ?? t('auth.signupErrorFallback')
+                  setStatus(message)
                 }
               } finally {
-                setSubmitting(false);
+                setSubmitting(false)
               }
             }}
           >
@@ -105,7 +105,7 @@ function SignupPage() {
                       variant="outline-secondary"
                       size="sm"
                       type="button"
-                      onClick={() => setShowPassword((prev) => !prev)}
+                      onClick={() => setShowPassword(prev => !prev)}
                     >
                       {showPassword ? t('auth.hidePassword') : t('auth.showPassword')}
                     </Button>
@@ -149,8 +149,7 @@ function SignupPage() {
         </Card.Body>
       </Card>
     </div>
-  );
+  )
 }
 
-export default SignupPage;
-
+export default SignupPage

@@ -1,5 +1,5 @@
-import i18n from 'i18next';
-import { initReactI18next } from 'react-i18next';
+import i18n from 'i18next'
+import { initReactI18next } from 'react-i18next'
 
 const ruTranslations = {
   app: {
@@ -74,7 +74,7 @@ const ruTranslations = {
     triggerTestError: 'Проверить отслеживание ошибок',
     rollbarTestCaptured: 'Тестовая ошибка отправлена в Rollbar. Проверьте панель управления.',
   },
-};
+}
 
 const enTranslations = {
   app: {
@@ -149,7 +149,7 @@ const enTranslations = {
     triggerTestError: 'Trigger error tracking test',
     rollbarTestCaptured: 'Rollbar test error was captured. Check your Rollbar dashboard.',
   },
-};
+}
 
 const resources = {
   ru: {
@@ -158,7 +158,7 @@ const resources = {
   en: {
     translation: enTranslations,
   },
-};
+}
 
 i18n
   .use(initReactI18next)
@@ -170,6 +170,6 @@ i18n
     interpolation: {
       escapeValue: false,
     },
-  });
+  })
 
-export default i18n;
+export default i18n

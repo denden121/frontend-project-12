@@ -1,19 +1,19 @@
-import { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
-import { Provider as ReduxProvider } from 'react-redux';
-import { Provider as RollbarProvider } from '@rollbar/react';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import './index.css';
-import App from './App.jsx';
-import store from './store/index';
-import './i18n';
-import './rollbarConfig';
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+import { BrowserRouter } from 'react-router-dom'
+import { Provider as ReduxProvider } from 'react-redux'
+import { Provider as RollbarProvider } from '@rollbar/react'
+import 'bootstrap/dist/css/bootstrap.min.css'
+import './index.css'
+import App from './App.jsx'
+import store from './store/index'
+import './i18n'
+import './rollbarConfig'
 
 const rollbarConfig = {
   accessToken: import.meta.env.VITE_ROLLBAR_ACCESS_TOKEN,
   environment: import.meta.env.VITE_ROLLBAR_ENV || 'production',
-};
+}
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -25,4 +25,4 @@ createRoot(document.getElementById('root')).render(
       </ReduxProvider>
     </RollbarProvider>
   </StrictMode>,
-);
+)

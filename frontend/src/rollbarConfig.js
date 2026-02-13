@@ -1,6 +1,6 @@
-import Rollbar from 'rollbar';
+import Rollbar from 'rollbar'
 
-const enabled = import.meta.env.PROD && Boolean(import.meta.env.VITE_ROLLBAR_ACCESS_TOKEN);
+const enabled = import.meta.env.PROD && Boolean(import.meta.env.VITE_ROLLBAR_ACCESS_TOKEN)
 
 export const rollbarInstance = enabled
   ? new Rollbar({
@@ -17,9 +17,8 @@ export const rollbarInstance = enabled
         },
       },
     })
-  : null;
+  : null
 
-export const isRollbarEnabled = enabled;
+export const isRollbarEnabled = enabled
 
-export default rollbarInstance;
-
+export default rollbarInstance

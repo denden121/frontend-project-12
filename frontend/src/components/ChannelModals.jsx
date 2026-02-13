@@ -1,18 +1,18 @@
-import { Formik, Form, Field } from 'formik';
-import * as Yup from 'yup';
+import { Formik, Form, Field } from 'formik'
+import * as Yup from 'yup'
 import {
   Button,
   Modal,
   Form as RBForm,
-} from 'react-bootstrap';
-import { useTranslation } from 'react-i18next';
-import { toast } from 'react-toastify';
+} from 'react-bootstrap'
+import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
 import {
   createChannel,
   renameChannel,
   removeChannel,
-} from '../slices/chatSlice';
-import { cleanText } from '../utils/profanity';
+} from '../slices/chatSlice'
+import { cleanText } from '../utils/profanity'
 
 export function AddChannelModal({
   isOpen,
@@ -23,8 +23,8 @@ export function AddChannelModal({
   token,
   dispatch,
 }) {
-  const { t } = useTranslation();
-  if (!isOpen) return null;
+  const { t } = useTranslation()
+  if (!isOpen) return null
 
   const schema = Yup.object({
     name: Yup.string()
@@ -33,7 +33,7 @@ export function AddChannelModal({
       .max(20, t('validation.channelNameLength'))
       .notOneOf(existingNames, t('validation.mustBeUnique'))
       .required(t('validation.required')),
-  });
+  })
 
   return (
     <Modal show={isOpen} onHide={onClose} centered>
@@ -48,11 +48,11 @@ export function AddChannelModal({
             await dispatch(createChannel({
               name: cleanText(values.name.trim()),
               token,
-            })).unwrap();
-            toast.success(t('chat.addChannelSuccess'));
-            onClose();
+            })).unwrap()
+            toast.success(t('chat.addChannelSuccess'))
+            onClose()
           } finally {
-            setSubmitting(false);
+            setSubmitting(false)
           }
         }}
       >
@@ -89,7 +89,7 @@ export function AddChannelModal({
         )}
       </Formik>
     </Modal>
-  );
+  )
 }
 
 export function RenameChannelModal({
@@ -101,8 +101,8 @@ export function RenameChannelModal({
   token,
   dispatch,
 }) {
-  const { t } = useTranslation();
-  if (!channel) return null;
+  const { t } = useTranslation()
+  if (!channel) return null
 
   const schema = Yup.object({
     name: Yup.string()
@@ -111,9 +111,9 @@ export function RenameChannelModal({
       .max(20, t('validation.channelNameLength'))
       .notOneOf(existingNames, t('validation.mustBeUnique'))
       .required(t('validation.required')),
-  });
+  })
 
-  const isRenaming = renamingChannelId === channel.id;
+  const isRenaming = renamingChannelId === channel.id
 
   return (
     <Modal show onHide={onClose} centered>
@@ -129,11 +129,11 @@ export function RenameChannelModal({
               id: channel.id,
               name: cleanText(values.name.trim()),
               token,
-            })).unwrap();
-            toast.success(t('chat.renameChannelSuccess'));
-            onClose();
+            })).unwrap()
+            toast.success(t('chat.renameChannelSuccess'))
+            onClose()
           } finally {
-            setSubmitting(false);
+            setSubmitting(false)
           }
         }}
       >
@@ -169,7 +169,7 @@ export function RenameChannelModal({
         )}
       </Formik>
     </Modal>
-  );
+  )
 }
 
 export function RemoveChannelModal({
@@ -180,16 +180,16 @@ export function RemoveChannelModal({
   token,
   dispatch,
 }) {
-  const { t } = useTranslation();
-  if (!channel) return null;
+  const { t } = useTranslation()
+  if (!channel) return null
 
-  const isRemoving = removingChannelId === channel.id;
+  const isRemoving = removingChannelId === channel.id
 
   const handleRemove = async () => {
-    await dispatch(removeChannel({ id: channel.id, token })).unwrap();
-    toast.success(t('chat.removeChannelSuccess'));
-    onClose();
-  };
+    await dispatch(removeChannel({ id: channel.id, token })).unwrap()
+    toast.success(t('chat.removeChannelSuccess'))
+    onClose()
+  }
 
   return (
     <Modal show onHide={onClose} centered>
@@ -214,6 +214,5 @@ export function RemoveChannelModal({
         </Button>
       </Modal.Footer>
     </Modal>
-  );
+  )
 }
-

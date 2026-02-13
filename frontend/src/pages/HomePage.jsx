@@ -1,33 +1,33 @@
-import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import {
   Alert,
   Button,
   Dropdown,
-} from 'react-bootstrap';
-import { useTranslation } from 'react-i18next';
-import { toast } from 'react-toastify';
-import { cleanText } from '../utils/profanity';
+} from 'react-bootstrap'
+import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
+import { cleanText } from '../utils/profanity'
 import {
   fetchChatData,
   setCurrentChannelId,
   sendMessage,
-} from '../slices/chatSlice';
-import { useAuth } from '../contexts/AuthContext';
-import { useSocket } from '../hooks/useSocket';
+} from '../slices/chatSlice'
+import { useAuth } from '../contexts/AuthContext'
+import { useSocket } from '../hooks/useSocket'
 import {
   AddChannelModal,
   RenameChannelModal,
   RemoveChannelModal,
-} from '../components/ChannelModals';
-import './HomePage.css';
+} from '../components/ChannelModals'
+import './HomePage.css'
 
 function HomePage() {
-  const dispatch = useDispatch();
-  const { token, username } = useAuth();
-  const [inputBody, setInputBody] = useState('');
-  const [menuChannelId, setMenuChannelId] = useState(null);
-  const [modal, setModal] = useState({ type: null, channelId: null });
+  const dispatch = useDispatch()
+  const { token, username } = useAuth()
+  const [inputBody, setInputBody] = useState('')
+  const [menuChannelId, setMenuChannelId] = useState(null)
+  const [modal, setModal] = useState({ type: null, channelId: null })
 
   const {
     channels,
@@ -42,39 +42,39 @@ function HomePage() {
     renamingChannelId,
     removingChannelId,
     channelsError,
-  } = useSelector((state) => state.chat);
-  const { t } = useTranslation();
+  } = useSelector(state => state.chat)
+  const { t } = useTranslation()
 
-  useSocket(!!token && status === 'succeeded');
+  useSocket(!!token && status === 'succeeded')
 
   useEffect(() => {
     if (token && status === 'idle') {
-      dispatch(fetchChatData(token));
+      dispatch(fetchChatData(token))
     }
-  }, [dispatch, token, status]);
+  }, [dispatch, token, status])
 
   // Toasts for data loading errors
   useEffect(() => {
     if (status === 'failed') {
-      toast.error(error || t('errors.loadChatErrorToast'));
+      toast.error(error || t('errors.loadChatErrorToast'))
     }
-  }, [status, error, t]);
+  }, [status, error, t])
 
   // Toasts for network connectivity changes
   useEffect(() => {
     if (!socketConnected && status === 'succeeded') {
-      toast.warning(t('errors.networkError'));
+      toast.warning(t('errors.networkError'))
     }
-  }, [socketConnected, status, t]);
+  }, [socketConnected, status, t])
 
   const handleSelectChannel = (channelId) => {
-    dispatch(setCurrentChannelId(channelId));
-  };
+    dispatch(setCurrentChannelId(channelId))
+  }
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    const body = inputBody.trim();
-    if (!body || !currentChannelId || sendStatus === 'loading') return;
+    e.preventDefault()
+    const body = inputBody.trim()
+    if (!body || !currentChannelId || sendStatus === 'loading') return
     dispatch(
       sendMessage({
         body,
@@ -84,35 +84,35 @@ function HomePage() {
       }),
     ).then((result) => {
       if (sendMessage.fulfilled.match(result)) {
-        setInputBody('');
+        setInputBody('')
       }
-    });
-  };
+    })
+  }
 
   const openAddModal = () => {
-    setModal({ type: 'add', channelId: null });
-  };
+    setModal({ type: 'add', channelId: null })
+  }
 
   const openRenameModal = (channelId) => {
-    setModal({ type: 'rename', channelId });
-  };
+    setModal({ type: 'rename', channelId })
+  }
 
   const openRemoveModal = (channelId) => {
-    setModal({ type: 'remove', channelId });
-  };
+    setModal({ type: 'remove', channelId })
+  }
 
   const closeModal = () => {
-    setModal({ type: null, channelId: null });
-  };
+    setModal({ type: null, channelId: null })
+  }
 
-  const currentChannel = channels.find((channel) => channel.id === currentChannelId) ?? null;
+  const currentChannel = channels.find(channel => channel.id === currentChannelId) ?? null
   const currentChannelMessages = messages.filter(
-    (message) => message.channelId === currentChannelId,
-  );
-  const isSending = sendStatus === 'loading';
-  const activeModalChannel = channels.find((c) => c.id === modal.channelId) ?? null;
+    message => message.channelId === currentChannelId,
+  )
+  const isSending = sendStatus === 'loading'
+  const activeModalChannel = channels.find(c => c.id === modal.channelId) ?? null
 
-  const existingNames = channels.map((c) => c.name.toLowerCase());
+  const existingNames = channels.map(c => c.name.toLowerCase())
 
   return (
     <div className="chat-page">
@@ -140,7 +140,7 @@ function HomePage() {
                 </Button>
               </div>
               <ul className="channels-list">
-                {channels.map((channel) => (
+                {channels.map(channel => (
                   <li key={channel.id}>
                     <div className="channels-list__item-wrapper">
                       <button
@@ -161,7 +161,7 @@ function HomePage() {
                         <Dropdown
                           className="channels-list__menu"
                           show={menuChannelId === channel.id}
-                          onToggle={(isOpen) => setMenuChannelId(isOpen ? channel.id : null)}
+                          onToggle={isOpen => setMenuChannelId(isOpen ? channel.id : null)}
                         >
                           <Dropdown.Toggle
                             size="sm"
@@ -193,7 +193,7 @@ function HomePage() {
             <main className="chat-layout__main">
               <h2>{currentChannel ? `# ${currentChannel.name}` : 'Выберите канал'}</h2>
               <div className="chat-messages">
-                {currentChannelMessages.map((message) => (
+                {currentChannelMessages.map(message => (
                   <div key={message.id} className="chat-message">
                     <span className="chat-message__author">
                       {message.username}
@@ -215,7 +215,7 @@ function HomePage() {
                   <input
                     className="chat-form__input"
                     value={inputBody}
-                    onChange={(e) => setInputBody(e.target.value)}
+                    onChange={e => setInputBody(e.target.value)}
                     placeholder={t('chat.messageInputPlaceholder')}
                     disabled={isSending}
                     aria-label={t('chat.messageInputAriaLabel')}
@@ -246,7 +246,7 @@ function HomePage() {
               channel={activeModalChannel}
               onClose={closeModal}
               existingNames={existingNames.filter(
-                (name) => name !== activeModalChannel.name.toLowerCase(),
+                name => name !== activeModalChannel.name.toLowerCase(),
               )}
               renamingChannelId={renamingChannelId}
               error={channelsError}
@@ -267,7 +267,7 @@ function HomePage() {
         </>
       )}
     </div>
-  );
+  )
 }
 
-export default HomePage;
+export default HomePage
