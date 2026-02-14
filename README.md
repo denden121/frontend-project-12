@@ -5,7 +5,6 @@
 ### Qlty (качество кода и покрытие)
 
 [![Maintainability](https://qlty.sh/badges/cd8a179b-108f-4627-beb0-bc560c8e35bb/maintainability.svg)](https://qlty.sh/gh/denden121/projects/frontend-project-12)
-[![Code Coverage](https://qlty.sh/badges/cd8a179b-108f-4627-beb0-bc560c8e35bb/coverage.svg)](https://qlty.sh/gh/denden121/projects/frontend-project-12)
 
 ## Деплой
 
