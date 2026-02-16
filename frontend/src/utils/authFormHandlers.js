@@ -1,7 +1,7 @@
 import { toast } from 'react-toastify'
 import { ROUTES, buildPathWithLang } from '../routes/routes'
 
-export const createSignupSubmit = (signup, navigate, t, lang) => async (values, { setStatus, setSubmitting }) => {
+export const createSignupSubmit = (signup, navigate, t) => async (values, { setStatus, setSubmitting }) => {
   setStatus(null)
   try {
     await signup(values.username.trim(), values.password)

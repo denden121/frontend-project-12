@@ -28,8 +28,8 @@ function SignupPage() {
 
   const validationSchema = useMemo(() => getSignupSchema(t), [t])
   const handleSubmit = useMemo(
-    () => createSignupSubmit(signup, navigate, t, lang),
-    [signup, navigate, t, lang],
+    () => createSignupSubmit(signup, navigate, t),
+    [signup, navigate, t],
   )
 
   return (

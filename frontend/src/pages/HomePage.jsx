@@ -194,7 +194,10 @@ function HomePage() {
               <div className="overflow-auto flex-grow-1 mb-3">
                 {currentChannelMessages.map(message => (
                   <div key={message.id} className="mb-2">
-                    <span className="fw-bold me-2">{message.username}:</span>
+                    <span className="fw-bold me-2">
+                      {message.username}
+                      :
+                    </span>
                     <span>{cleanText(message.body)}</span>
                   </div>
                 ))}
