@@ -146,15 +146,18 @@ function HomePage() {
                       as="li"
                       className="d-flex justify-content-between align-items-center px-2 py-1"
                       variant={channel.id === currentChannelId ? 'primary' : undefined}
-                      action={channel.id !== currentChannelId}
                       active={channel.id === currentChannelId}
-                      onClick={channel.id !== currentChannelId ? () => handleSelectChannel(channel.id) : undefined}
                     >
-                      <span className="text-truncate flex-grow-1">
+                      <button
+                        type="button"
+                        className={`list-group-item list-group-item-action border-0 p-0 bg-transparent text-start text-truncate flex-grow-1 ${channel.id === currentChannelId ? 'active' : ''}`}
+                        onClick={() => handleSelectChannel(channel.id)}
+                        aria-label={channel.name}
+                      >
                         #
                         {' '}
                         {channel.name}
-                      </span>
+                      </button>
                       {channel.removable && (
                         <Dropdown
                           onClick={e => e.stopPropagation()}
