@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Formik, Form, Field } from 'formik'
 import {
@@ -10,7 +10,8 @@ import {
 } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '../contexts/AuthContext'
-import { ROUTES, buildPathWithLang, DEFAULT_LANG } from '../routes'
+import { ROUTES, buildPathWithLang, DEFAULT_LANG } from '../routes/routes'
+import { createLoginSubmit } from '../utils/authFormHandlers'
 
 function LoginPage() {
   const { login } = useAuth()
@@ -19,6 +20,11 @@ function LoginPage() {
   const { t, i18n } = useTranslation()
   const lang = i18n.language || DEFAULT_LANG
 
+  const handleSubmit = useMemo(
+    () => createLoginSubmit(login, navigate, t, lang),
+    [login, navigate, t, lang],
+  )
+
   return (
     <div className="d-flex justify-content-center mt-5">
       <Card style={{ width: '100%', maxWidth: '520px' }}>
@@ -26,22 +32,7 @@ function LoginPage() {
           <Card.Title className="mb-3">{t('auth.login')}</Card.Title>
           <Formik
             initialValues={{ username: '', password: '' }}
-            onSubmit={async (values, { setStatus }) => {
-              setStatus(null)
-              try {
-                await login(values.username, values.password)
-                navigate(buildPathWithLang(ROUTES.home, lang), { replace: true })
-              }
-              catch (err) {
-                if (err.response?.status === 401) {
-                  setStatus(t('auth.invalidCredentials'))
-                }
-                else {
-                  const message = err.response?.data?.message ?? err.message ?? t('auth.loginErrorFallback')
-                  setStatus(message)
-                }
-              }
-            }}
+            onSubmit={handleSubmit}
           >
             {({ status, isSubmitting }) => (
               <Form>

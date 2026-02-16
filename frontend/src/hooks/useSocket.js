@@ -7,7 +7,7 @@ import {
   channelRemoved,
   channelRenamed,
   setSocketConnected,
-} from '../slices/chatSlice'
+} from '../store/slices/chatSlice'
 
 export function useSocket(enabled) {
   const dispatch = useDispatch()

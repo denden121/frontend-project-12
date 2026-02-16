@@ -1,7 +1,6 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useNavigate, Link, useSearchParams } from 'react-router-dom'
 import { Formik, Form, Field } from 'formik'
-import * as Yup from 'yup'
 import {
   Alert,
   Button,
@@ -10,28 +9,14 @@ import {
   InputGroup,
 } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
-import { toast } from 'react-toastify'
 import { useAuth } from '../contexts/AuthContext'
 import {
   ROUTES,
   DEFAULT_LANG,
   buildPathWithLang,
-} from '../routes'
-import './SignupPage.css'
-
-const SignupSchema = t => Yup.object({
-  username: Yup.string()
-    .trim()
-    .min(3, t('validation.usernameLength'))
-    .max(20, t('validation.usernameLength'))
-    .required(t('validation.required')),
-  password: Yup.string()
-    .min(6, t('validation.passwordMin'))
-    .required(t('validation.required')),
-  confirmPassword: Yup.string()
-    .oneOf([Yup.ref('password')], t('validation.passwordsMustMatch'))
-    .required(t('validation.required')),
-})
+} from '../routes/routes'
+import { getSignupSchema } from '../schemas/signupSchema'
+import { createSignupSubmit } from '../utils/authFormHandlers'
 
 function SignupPage() {
   const { signup } = useAuth()
@@ -41,6 +26,12 @@ function SignupPage() {
   const [searchParams] = useSearchParams()
   const lang = searchParams.get('lang') || DEFAULT_LANG
 
+  const validationSchema = useMemo(() => getSignupSchema(t), [t])
+  const handleSubmit = useMemo(
+    () => createSignupSubmit(signup, navigate, t, lang),
+    [signup, navigate, t, lang],
+  )
+
   return (
     <div className="d-flex justify-content-center mt-5">
       <Card style={{ width: '100%', maxWidth: '520px' }}>
@@ -48,27 +39,8 @@ function SignupPage() {
           <Card.Title className="mb-3">{t('auth.signup')}</Card.Title>
           <Formik
             initialValues={{ username: '', password: '', confirmPassword: '' }}
-            validationSchema={SignupSchema(t)}
-            onSubmit={async (values, { setStatus, setSubmitting }) => {
-              setStatus(null)
-              try {
-                await signup(values.username.trim(), values.password)
-                navigate(buildPathWithLang(ROUTES.home, lang), { replace: true })
-              }
-              catch (err) {
-                if (err.response?.status === 409) {
-                  toast.error(t('auth.userExists'))
-                  navigate(buildPathWithLang(ROUTES.home, lang), { replace: true })
-                }
-                else {
-                  const message = err.response?.data?.message ?? err.message ?? t('auth.signupErrorFallback')
-                  setStatus(message)
-                }
-              }
-              finally {
-                setSubmitting(false)
-              }
-            }}
+            validationSchema={validationSchema}
+            onSubmit={handleSubmit}
           >
             {({
               status,
@@ -92,7 +64,7 @@ function SignupPage() {
                     autoFocus
                   />
                   {errors.username && touched.username && (
-                    <div className="modal-error">{errors.username}</div>
+                    <div className="text-danger small mt-1">{errors.username}</div>
                   )}
                 </RBForm.Group>
                 <RBForm.Group className="mb-3" controlId="signupPassword">
@@ -119,7 +91,7 @@ function SignupPage() {
                     </div>
                   )}
                   {errors.password && touched.password && (
-                    <div className="modal-error">{errors.password}</div>
+                    <div className="text-danger small mt-1">{errors.password}</div>
                   )}
                 </RBForm.Group>
                 <RBForm.Group className="mb-4" controlId="signupConfirmPassword">
@@ -131,7 +103,7 @@ function SignupPage() {
                     autoComplete="new-password"
                   />
                   {errors.confirmPassword && touched.confirmPassword && (
-                    <div className="modal-error">{errors.confirmPassword}</div>
+                    <div className="text-danger small mt-1">{errors.confirmPassword}</div>
                   )}
                 </RBForm.Group>
                 <div className="d-flex justify-content-between align-items-center">

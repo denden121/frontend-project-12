@@ -17,12 +17,11 @@ import LoginPage from './pages/LoginPage'
 import NotFoundPage from './pages/NotFoundPage'
 import SignupPage from './pages/SignupPage'
 import BuggyTestButton from './pages/BuggyTestButton'
-import './App.css'
 import {
   ROUTES,
   ROUTE_SEGMENTS,
   DEFAULT_LANG,
-} from './routes'
+} from './routes/routes'
 
 function Layout() {
   const { isAuthenticated, username, logout } = useAuth()
@@ -54,7 +53,7 @@ function Layout() {
           <Navbar.Toggle aria-controls="main-navbar" />
           <Navbar.Collapse id="main-navbar" className="justify-content-end">
             <div className="d-flex align-items-center gap-3">
-              <div className="btn-group navbar-lang-switcher" role="group" aria-label="Language switcher">
+              <div className="btn-group" role="group" aria-label="Language switcher">
                 <Button
                   variant={lang === 'ru' ? 'outline-light' : 'outline-secondary'}
                   size="sm"
@@ -79,7 +78,6 @@ function Layout() {
                       <Button
                         variant="outline-light"
                         size="sm"
-                        className="navbar-auth-button"
                         onClick={handleLogout}
                       >
                         {t('auth.logout')}
@@ -91,14 +89,12 @@ function Layout() {
                       <Nav.Link
                         as={Link}
                         to={ROUTES.login}
-                        className="navbar-auth-link"
                       >
                         {t('auth.login')}
                       </Nav.Link>
                       <Nav.Link
                         as={Link}
                         to={ROUTES.signup}
-                        className="navbar-auth-link"
                       >
                         {t('auth.signup')}
                       </Nav.Link>
@@ -108,7 +104,7 @@ function Layout() {
           </Navbar.Collapse>
         </Container>
       </Navbar>
-      <Container className="mt-4 app-main">
+      <Container className="mt-4 flex-grow-1 d-flex flex-column">
         <div className="d-flex justify-content-between align-items-start gap-3">
           <div className="flex-grow-1">
             <Outlet />

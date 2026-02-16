@@ -4,6 +4,8 @@ import {
   Alert,
   Button,
   Dropdown,
+  Form,
+  ListGroup,
 } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
@@ -12,15 +14,14 @@ import {
   fetchChatData,
   setCurrentChannelId,
   sendMessage,
-} from '../slices/chatSlice'
+} from '../store/slices/chatSlice'
 import { useAuth } from '../contexts/AuthContext'
 import { useSocket } from '../hooks/useSocket'
 import {
   AddChannelModal,
   RenameChannelModal,
   RemoveChannelModal,
-} from '../components/ChannelModals'
-import './HomePage.css'
+} from '../components/modals'
 
 function HomePage() {
   const dispatch = useDispatch()
@@ -53,14 +54,12 @@ function HomePage() {
     }
   }, [dispatch, token, status])
 
-  // Toasts for data loading errors
   useEffect(() => {
     if (status === 'failed') {
       toast.error(error || t('errors.loadChatErrorToast'))
     }
   }, [status, error, t])
 
-  // Toasts for network connectivity changes
   useEffect(() => {
     if (!socketConnected && status === 'succeeded') {
       toast.warning(t('errors.networkError'))
@@ -115,120 +114,113 @@ function HomePage() {
   const existingNames = channels.map(c => c.name.toLowerCase())
 
   return (
-    <div className="chat-page">
+    <div className="d-flex flex-column flex-grow-1">
       {status === 'loading' && <p>{t('chat.loading')}</p>}
       {status === 'failed' && <p>{error || t('chat.loadError')}</p>}
 
       {status === 'succeeded' && (
         <>
           {!socketConnected && (
-            <p className="chat-status chat-status--offline">
+            <p className="text-warning small mb-2">
               {t('chat.offlineNotice')}
             </p>
           )}
-          <div className="chat-layout">
-            <aside className="chat-layout__sidebar">
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-                <h2 style={{ margin: 0 }}>{t('chat.channels')}</h2>
-                <Button
-                  type="button"
-                  size="sm"
-                  variant="outline-primary"
-                  onClick={openAddModal}
-                >
-                  +
-                </Button>
-              </div>
-              <ul className="channels-list">
-                {channels.map(channel => (
-                  <li key={channel.id}>
-                    <div className="channels-list__item-wrapper">
-                      <button
-                        type="button"
-                        onClick={() => handleSelectChannel(channel.id)}
-                        className={`channels-list__item${
-                          channel.id === currentChannelId ? ' channels-list__item--active' : ''
-                        }`}
-                        aria-label={channel.name}
-                      >
-                        <span className="channels-list__name">
-                          #
-                          {' '}
-                          {channel.name}
-                        </span>
-                      </button>
+          <div className="row flex-grow-1 g-3">
+            <aside className="col-12 col-md-4 col-lg-3">
+              <div className="border rounded p-3 overflow-auto">
+                <div className="d-flex justify-content-between align-items-center mb-2">
+                  <h2 className="h5 mb-0">{t('chat.channels')}</h2>
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="outline-primary"
+                    onClick={openAddModal}
+                  >
+                    +
+                  </Button>
+                </div>
+                <ListGroup variant="flush">
+                  {channels.map(channel => (
+                    <ListGroup.Item
+                      key={channel.id}
+                      as="li"
+                      className="d-flex justify-content-between align-items-center px-2 py-1"
+                      variant={channel.id === currentChannelId ? 'primary' : undefined}
+                      action={channel.id !== currentChannelId}
+                      active={channel.id === currentChannelId}
+                      onClick={channel.id !== currentChannelId ? () => handleSelectChannel(channel.id) : undefined}
+                    >
+                      <span className="text-truncate flex-grow-1">
+                        #
+                        {' '}
+                        {channel.name}
+                      </span>
                       {channel.removable && (
                         <Dropdown
-                          className="channels-list__menu"
+                          onClick={e => e.stopPropagation()}
                           show={menuChannelId === channel.id}
                           onToggle={isOpen => setMenuChannelId(isOpen ? channel.id : null)}
                         >
                           <Dropdown.Toggle
                             size="sm"
                             variant="outline-secondary"
-                            className="channels-list__menu-button"
+                            className="py-0"
                           >
                             <span className="visually-hidden">{t('chat.manageChannel')}</span>
                           </Dropdown.Toggle>
                           <Dropdown.Menu align="end">
-                            <Dropdown.Item
-                              onClick={() => openRenameModal(channel.id)}
-                            >
-                              Переименовать
+                            <Dropdown.Item onClick={() => openRenameModal(channel.id)}>
+                              {t('chat.renameChannel')}
                             </Dropdown.Item>
-                            <Dropdown.Item
-                              onClick={() => openRemoveModal(channel.id)}
-                            >
-                              Удалить
+                            <Dropdown.Item onClick={() => openRemoveModal(channel.id)}>
+                              {t('chat.removeChannel')}
                             </Dropdown.Item>
                           </Dropdown.Menu>
                         </Dropdown>
                       )}
-                    </div>
-                  </li>
-                ))}
-              </ul>
+                    </ListGroup.Item>
+                  ))}
+                </ListGroup>
+              </div>
             </aside>
 
-            <main className="chat-layout__main">
-              <h2>{currentChannel ? `# ${currentChannel.name}` : 'Выберите канал'}</h2>
-              <div className="chat-messages">
+            <main className="col border rounded p-3 d-flex flex-column overflow-hidden min-vh-0">
+              <h2 className="h5 mb-3">
+                {currentChannel ? `# ${currentChannel.name}` : t('chat.selectChannel')}
+              </h2>
+              <div className="overflow-auto flex-grow-1 mb-3">
                 {currentChannelMessages.map(message => (
-                  <div key={message.id} className="chat-message">
-                    <span className="chat-message__author">
-                      {message.username}
-                      :
-                    </span>
+                  <div key={message.id} className="mb-2">
+                    <span className="fw-bold me-2">{message.username}:</span>
                     <span>{cleanText(message.body)}</span>
                   </div>
                 ))}
-                {currentChannelMessages.length === 0 && <p>{t('chat.noMessages')}</p>}
+                {currentChannelMessages.length === 0 && <p className="text-muted">{t('chat.noMessages')}</p>}
               </div>
 
-              <form className="chat-form" onSubmit={handleSubmit}>
+              <Form onSubmit={handleSubmit} className="mt-auto pt-2 border-top">
                 {sendError && (
-                  <Alert variant="danger" className="chat-form__error" role="alert">
+                  <Alert variant="danger" className="py-2 mb-2" role="alert">
                     {sendError}
                   </Alert>
                 )}
-                <div className="chat-form__row">
-                  <input
-                    className="chat-form__input"
+                <div className="d-flex gap-2">
+                  <Form.Control
                     value={inputBody}
                     onChange={e => setInputBody(e.target.value)}
                     placeholder={t('chat.messageInputPlaceholder')}
                     disabled={isSending}
                     aria-label={t('chat.messageInputAriaLabel')}
                   />
-                  <button
+                  <Button
                     type="submit"
-                    className="chat-form__submit"
+                    variant="primary"
                     disabled={isSending || !inputBody.trim()}
                   >
                     {isSending ? t('chat.sending') : t('chat.send')}
-                  </button>
+                  </Button>
                 </div>
-              </form>
+              </Form>
             </main>
           </div>
 

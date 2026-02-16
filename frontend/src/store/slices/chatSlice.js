@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import axios from 'axios'
-import apiRoutes from '../apiRoutes'
+import apiRoutes from '../../routes/apiRoutes'
 
 const getErrorMessage = (error, fallback) => (
   error?.response?.data?.message ?? error?.message ?? fallback

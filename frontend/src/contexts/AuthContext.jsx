@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useCallback } from 'react'
 import axios from 'axios'
-import apiRoutes from '../apiRoutes'
+import apiRoutes from '../routes/apiRoutes'
 
 const STORAGE_KEY = 'chat_token'
 const USERNAME_KEY = 'chat_username'
