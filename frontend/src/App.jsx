@@ -74,33 +74,33 @@ function Layout() {
               </div>
               {isAuthenticated
                 ? (
-                  <div className="d-flex align-items-center gap-2">
-                    <span>{username}</span>
-                    <Button
-                      variant="outline-light"
-                      size="sm"
-                      onClick={handleLogout}
-                    >
-                      {t('auth.logout')}
-                    </Button>
-                  </div>
-                )
+                    <div className="d-flex align-items-center gap-2">
+                      <span>{username}</span>
+                      <Button
+                        variant="outline-light"
+                        size="sm"
+                        onClick={handleLogout}
+                      >
+                        {t('auth.logout')}
+                      </Button>
+                    </div>
+                  )
                 : (
-                  <Nav>
-                    <Nav.Link
-                      as={Link}
-                      to={ROUTES.login}
-                    >
-                      {t('auth.login')}
-                    </Nav.Link>
-                    <Nav.Link
-                      as={Link}
-                      to={ROUTES.signup}
-                    >
-                      {t('auth.signup')}
-                    </Nav.Link>
-                  </Nav>
-                )}
+                    <Nav>
+                      <Nav.Link
+                        as={Link}
+                        to={ROUTES.login}
+                      >
+                        {t('auth.login')}
+                      </Nav.Link>
+                      <Nav.Link
+                        as={Link}
+                        to={ROUTES.signup}
+                      >
+                        {t('auth.signup')}
+                      </Nav.Link>
+                    </Nav>
+                  )}
             </div>
           </Navbar.Collapse>
         </Container>

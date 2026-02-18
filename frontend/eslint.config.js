@@ -28,7 +28,10 @@ export default defineConfig([
     },
     rules: {
       'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
-      '@stylistic/indent': ['error', 2],
+      '@stylistic/indent': ['error', 2, {
+        SwitchCase: 1,
+        offsetTernaryExpressions: true,
+      }],
       '@stylistic/semi': ['error', 'never'],
       '@stylistic/arrow-parens': ['error', 'as-needed', { requireForBlockBody: true }],
       '@stylistic/padded-blocks': ['error', 'never'],

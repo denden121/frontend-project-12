@@ -144,9 +144,9 @@ function HomePage() {
     : 'd-flex flex-column flex-grow-1 min-h-0 overflow-hidden'
   const rootStyle = status === 'succeeded'
     ? {
-      gridTemplateColumns: '260px 1fr',
-      gridTemplateRows: !socketConnected ? 'auto 1fr' : '1fr',
-    }
+        gridTemplateColumns: '260px 1fr',
+        gridTemplateRows: !socketConnected ? 'auto 1fr' : '1fr',
+      }
     : undefined
 
   return (
