@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react'
 import { Formik, Form, Field } from 'formik'
 import { Button, Form as RBForm, Modal } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
@@ -16,6 +17,12 @@ export function AddChannelModalContent({
 }) {
   const { t } = useTranslation()
   const schema = getChannelNameSchema(t, existingNames)
+  const inputRef = useRef(null)
+
+  useEffect(() => {
+    const id = setTimeout(() => inputRef.current?.focus(), 100)
+    return () => clearTimeout(id)
+  }, [])
 
   return (
     <Formik
@@ -40,12 +47,16 @@ export function AddChannelModalContent({
           <Modal.Body>
             <RBForm.Group className="mb-3" controlId="newChannelName">
               <RBForm.Label>{t('chat.channelName')}</RBForm.Label>
-              <Field
-                name="name"
-                as={RBForm.Control}
-                autoFocus
-                placeholder={t('chat.newChannelPlaceholder')}
-              />
+              <Field name="name">
+                {({ field }) => (
+                  <RBForm.Control
+                    {...field}
+                    ref={inputRef}
+                    autoComplete="off"
+                    placeholder={t('chat.newChannelPlaceholder')}
+                  />
+                )}
+              </Field>
               {errors.name && touched.name && (
                 <div className="text-danger small mt-1">{errors.name}</div>
               )}

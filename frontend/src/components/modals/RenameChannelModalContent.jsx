@@ -48,6 +48,7 @@ export function RenameChannelModalContent({
               <Field
                 name="name"
                 as={RBForm.Control}
+                autoComplete="off"
                 autoFocus
               />
               {errors.name && touched.name && (

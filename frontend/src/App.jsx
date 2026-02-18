@@ -41,8 +41,8 @@ function Layout() {
   }
 
   return (
-    <>
-      <Navbar bg="dark" variant="dark" expand="sm">
+    <div className="d-flex flex-column flex-grow-1 min-h-0">
+      <Navbar bg="dark" variant="dark" expand="sm" className="flex-shrink-0">
         <Container>
           <Navbar.Brand
             as={Link}
@@ -53,6 +53,7 @@ function Layout() {
           <Navbar.Toggle aria-controls="main-navbar" />
           <Navbar.Collapse id="main-navbar" className="justify-content-end">
             <div className="d-flex align-items-center gap-3">
+              <BuggyTestButton />
               <div className="btn-group" role="group" aria-label="Language switcher">
                 <Button
                   variant={lang === 'ru' ? 'outline-light' : 'outline-secondary'}
@@ -73,46 +74,41 @@ function Layout() {
               </div>
               {isAuthenticated
                 ? (
-                    <div className="d-flex align-items-center gap-2">
-                      <span>{username}</span>
-                      <Button
-                        variant="outline-light"
-                        size="sm"
-                        onClick={handleLogout}
-                      >
-                        {t('auth.logout')}
-                      </Button>
-                    </div>
-                  )
+                  <div className="d-flex align-items-center gap-2">
+                    <span>{username}</span>
+                    <Button
+                      variant="outline-light"
+                      size="sm"
+                      onClick={handleLogout}
+                    >
+                      {t('auth.logout')}
+                    </Button>
+                  </div>
+                )
                 : (
-                    <Nav>
-                      <Nav.Link
-                        as={Link}
-                        to={ROUTES.login}
-                      >
-                        {t('auth.login')}
-                      </Nav.Link>
-                      <Nav.Link
-                        as={Link}
-                        to={ROUTES.signup}
-                      >
-                        {t('auth.signup')}
-                      </Nav.Link>
-                    </Nav>
-                  )}
+                  <Nav>
+                    <Nav.Link
+                      as={Link}
+                      to={ROUTES.login}
+                    >
+                      {t('auth.login')}
+                    </Nav.Link>
+                    <Nav.Link
+                      as={Link}
+                      to={ROUTES.signup}
+                    >
+                      {t('auth.signup')}
+                    </Nav.Link>
+                  </Nav>
+                )}
             </div>
           </Navbar.Collapse>
         </Container>
       </Navbar>
-      <Container className="mt-4 flex-grow-1 d-flex flex-column">
-        <div className="d-flex justify-content-between align-items-start gap-3">
-          <div className="flex-grow-1">
-            <Outlet />
-          </div>
-          <BuggyTestButton />
-        </div>
+      <Container fluid className="content-below-header mt-0 d-flex flex-column flex-grow-1 min-h-0 overflow-hidden px-3 py-3">
+        <Outlet />
       </Container>
-    </>
+    </div>
   )
 }
 

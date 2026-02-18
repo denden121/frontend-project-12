@@ -60,7 +60,7 @@ function SignupPage() {
                     name="username"
                     as={RBForm.Control}
                     type="text"
-                    autoComplete="username"
+                    autoComplete="off"
                     autoFocus
                   />
                   {errors.username && touched.username && (
@@ -74,7 +74,7 @@ function SignupPage() {
                       name="password"
                       as={RBForm.Control}
                       type={showPassword ? 'text' : 'password'}
-                      autoComplete="new-password"
+                      autoComplete="off"
                     />
                     <Button
                       variant="outline-secondary"
@@ -100,7 +100,7 @@ function SignupPage() {
                     name="confirmPassword"
                     as={RBForm.Control}
                     type="password"
-                    autoComplete="new-password"
+                    autoComplete="off"
                   />
                   {errors.confirmPassword && touched.confirmPassword && (
                     <div className="text-danger small mt-1">{errors.confirmPassword}</div>

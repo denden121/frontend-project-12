@@ -1,3 +1,7 @@
+:root {
+  --header-height: 56px; /* высота Bootstrap Navbar */
+}
+
 html,
 body,
 #root {
@@ -7,4 +11,9 @@ body,
 body {
   margin: 0;
   min-width: 320px;
+}
+
+.content-below-header {
+  height: calc(100vh - var(--header-height));
+  min-height: 0;
 }

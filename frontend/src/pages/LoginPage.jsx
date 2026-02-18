@@ -47,7 +47,7 @@ function LoginPage() {
                     name="username"
                     as={RBForm.Control}
                     type="text"
-                    autoComplete="username"
+                    autoComplete="off"
                     autoFocus
                   />
                 </RBForm.Group>
@@ -58,7 +58,7 @@ function LoginPage() {
                       name="password"
                       as={RBForm.Control}
                       type={showPassword ? 'text' : 'password'}
-                      autoComplete="current-password"
+                      autoComplete="off"
                     />
                     <Button
                       variant="outline-secondary"
